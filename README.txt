@@ -34,3 +34,17 @@ git add README.txt
 git commit -m "update README :)"
 
 git push origin README-txt
+
+
+
+------
+if you have issues:
+
+use 
+git checkout <name> (has to be on GitHub and pushed as a new branch already)
+
+git branch main <name> -f (forces it to go into main branch, don't do this unless you have to)
+
+git checkout main
+
+git push origin main -f
