@@ -27,7 +27,13 @@ GitHub, <name> should the same as the <name> from git checkout -b <name>
 
 example:
 
+git pull https://github.com/Professionaldiot/csc-360-project
+
 git checkout -b README-txt
+
+git push origin
+
+//or just create the branch on github
 
 git add README.txt
 
@@ -40,11 +46,6 @@ git push origin README-txt
 ------
 if you have issues:
 
-use 
-git checkout <name> (has to be on GitHub and pushed as a new branch already)
+with not being able to pull do:
 
-git branch main <name> -f (forces it to go into main branch, don't do this unless you have to)
-
-git checkout main
-
-git push origin main -f
+git pull origin --allow-unrelated-histories
