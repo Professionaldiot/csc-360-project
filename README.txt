@@ -31,9 +31,9 @@ git pull https://github.com/Professionaldiot/csc-360-project
 
 git checkout -b README-txt
 
-git push origin
+git push --set-upstream origin README-txt
 
-//or just create the branch on github
+//this pushes the branch to the GitHub so it's not messy later
 
 git add README.txt
 
