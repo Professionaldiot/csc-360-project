@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import URL from java.net;
 import {RemoteWebDriver, DesiredCapabilities} from org.openqa.selenium.remote;
 import until from org.openqa.selenium.support.ui;
@@ -31,3 +32,6 @@ describe('Username Interaction', function() {
     });
     
 });
+=======
+
+>>>>>>> 85a6a52 (Create login-front.js)
