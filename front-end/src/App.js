@@ -28,25 +28,34 @@ function App() {
           <h1>Login</h1>
 
           {/*Username Text Field*/}
-          <TextField  
-            required
-            id="filled-required"
-            label="Username"
-            variant="filled"
-          />             
+          <div className='textField'>
+            <TextField  
+              required
+              id="filled-required"
+              label="Username"
+              variant="filled"
+            />   
+          </div>
           <br/>
+
           {/*Password Text Field*/}        
-          <TextField
-            id="filled-password-input"
-            label="Password"
-            type="password"
-            autoComplete="current-password"
-            variant="filled"
-          />
+          <div className='textField'>
+            <TextField
+              id="filled-password-input"
+              label="Password"
+              type="password"
+              autoComplete="current-password"
+              variant="filled"
+            />
+          </div>
           <br/>
-          {/*Login/Guest Buttons*/}        
-          <Button variant="outlined">Login</Button>
-          <Button variant="outlined">Guest</Button>
+
+          {/*Login/Guest Buttons*/}  
+          <div className='textField'>
+            <Button variant="outlined">Login</Button>
+            <Button variant="outlined">Guest</Button>
+          </div>      
+
         </div>
       </div>
     </>
