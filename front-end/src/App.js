@@ -4,9 +4,11 @@ import TextField from '@mui/material/TextField';
 import { createTheme } from '@mui/material';
 import Button from '@mui/material/Button';
 
+// main function, runs the HTML stuff
 function App() {
   return (
     <>
+    {/*Header business here*/}
       <div className='headContainer'>
         <div className='selfService-Header'>
           <p>Cornell</p>
@@ -19,15 +21,19 @@ function App() {
         </div>
       </div>
 
+      {/*All login stuff in this <div>*/}
       <div className='loginBox'>
         <h1>Login</h1>
-        <TextField
+
+        {/*Username Text Field*/}
+        <TextField  
           required
           id="filled-required"
           label="Username"
           variant="filled"
         />             
         <br/>
+        {/*Password Text Field*/}        
         <TextField
           id="filled-password-input"
           label="Password"
@@ -36,6 +42,7 @@ function App() {
           variant="filled"
         />
         <br/>
+        {/*Login/Guest Buttons*/}        
         <Button variant="outlined">Login</Button>
         <Button variant="outlined">Guest</Button>
       </div>
