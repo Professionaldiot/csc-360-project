@@ -12,7 +12,7 @@ function App() {
     {/*Header business here*/}
       <div className='headContainer'>
         <div className='selfService-Header'>
-          <p>Cornell</p>
+          <img src={"https://www.cornellcollege.edu/assets/production/images/cornell_logo_white.png"} className="cornell-logo" alt="logo" />
         </div>
         <div className='subHeader'>
           <p>Courses</p>
@@ -22,32 +22,33 @@ function App() {
         </div>
       </div>
 
-      {/*All login stuff in this <div>*/}
-      <div className='loginBox'>
-        <h1>Login</h1>
+        {/*All login stuff in this <div>*/}
+      <div className='loginBack'>
+        <div className='loginBox'>
+          <h1>Login</h1>
 
-        {/*Username Text Field*/}
-        <TextField  
-          required
-          id="filled-required"
-          label="Username"
-          variant="filled"
-        />             
-        <br/>
-        {/*Password Text Field*/}        
-        <TextField
-          id="filled-password-input"
-          label="Password"
-          type="password"
-          autoComplete="current-password"
-          variant="filled"
-        />
-        <br/>
-        {/*Login/Guest Buttons*/}        
-        <Button variant="outlined">Login</Button>
-        <Button variant="outlined">Guest</Button>
+          {/*Username Text Field*/}
+          <TextField  
+            required
+            id="filled-required"
+            label="Username"
+            variant="filled"
+          />             
+          <br/>
+          {/*Password Text Field*/}        
+          <TextField
+            id="filled-password-input"
+            label="Password"
+            type="password"
+            autoComplete="current-password"
+            variant="filled"
+          />
+          <br/>
+          {/*Login/Guest Buttons*/}        
+          <Button variant="outlined">Login</Button>
+          <Button variant="outlined">Guest</Button>
+        </div>
       </div>
-
     </>
   );
 }
