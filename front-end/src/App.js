@@ -37,6 +37,7 @@ function App() {
         />
         <br/>
         <Button variant="outlined">Login</Button>
+        <Button variant="outlined">Guest</Button>
       </div>
 
     </>
