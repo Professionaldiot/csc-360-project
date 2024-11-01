@@ -3,34 +3,61 @@
 .selfService-Header {
   background-color: #7c2bb3;
   color: white;
-  padding: 12px;
+  padding: 6px;
   float: left;
+  font-size: calc(13px + 2vmin);
   font-family: 'Times New Roman', Times, serif;
   display: flex;
+  flex-direction: row;
+  align-items: center;
 }
 
 .subHeader {
   background-color: white;
   color: #7c2bb3;
-  padding: 12px;
+  padding: 5px;
   float: left;
-  border-radius: 4px;
+  border-radius: 10px;
   width: 100%;
   border-color: #7c2bb3;
+}
+
+.cornell-logo {
+  height: 4vmin;
+  pointer-events: none;
 }
 
 .headContainer {
   float: left;
   display: flex;
+  flex-direction: row;
+  align-items: center;
   background-color: #7c2bb3;
   width: 100%;
+  max-width: 210vmin;
 }
 
 .loginBox {
   color: black;
-  width: auto;
+  display: block;
   align-items: center;
   font-family: 'Times New Roman', Times, serif;
+  max-height: 100vmin;
+}
+
+.loginBack {
+  background-color: #d1cece;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  position: absolute;
+  top:13.6vmin;
+  left:0vmin;
+  right: 0vmin;
+  bottom:0vmin;
+  max-width: 210vmin;
+  max-height:100vmin;
+  
 }
 
 
