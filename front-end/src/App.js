@@ -25,10 +25,10 @@ function App() {
 
       {/*All login stuff in this <div>*/}
       <div className='loginBack'>
-        <Box sx={{justifyContent: 'space-around', alignItems: 'center', position: "absolute", top: '50px'}}>
+        <Box sx={{ justifyContent: 'space-around', alignItems: 'center', position: "absolute", top: '50px' }}>
           <Card sx={{ backgroundColor: '#00000025', height: '310px' }}>
             <CardContent>
-              <Typography variant="h2" component="div" sx={{ textAlign: "center"}}>
+              <Typography variant="h2" component="div" sx={{ textAlign: "center" }}>
                 Login
               </Typography>
               <TextField
@@ -36,8 +36,8 @@ function App() {
                 label="Username"
                 variant="filled"
               />
-              <br/>
-              <br/>
+              <br />
+              <br />
               <TextField
                 id="filled-password-input"
                 label="Password"
@@ -46,7 +46,7 @@ function App() {
                 variant="filled"
               />
             </CardContent>
-            <CardActions sx={{ alignItems: "center", justifyContent: "space-around"}}>
+            <CardActions sx={{ alignItems: "center", justifyContent: "space-around" }}>
               <Button variant="outlined">Login</Button>
               <Button variant="outlined">Guest</Button>
             </CardActions>
