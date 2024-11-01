@@ -13,7 +13,7 @@ describe('Google Search Test', function() {
     //This sets up a web driver to run on localhost on internet explorer before the test.
     before(async function() {
         DesiredCapabilities capability = DesiredCapabilities.internetExplorer();
-        driver = new RemoteWebDriver(new URL("http://127.0.0.1:8080/wd/hub"), capability);
+        driver = new RemoteWebDriver(new URL("http://127.0.0.1:8080/wd/hub"), capability); //The url is for the local host. This may change depending on the localhost actually used.
     });
 
     //This gets rid of the driver after the test.
@@ -23,7 +23,6 @@ describe('Google Search Test', function() {
 
     //This is the test. Right now it is doing unimport things.
     it('should open Google and search for Selenium WebDriver', async function() {
-        await driver.get('https://www.google.com');
         await driver.findElement(By.name('q')).sendKeys('Selenium WebDriver', Key.RETURN);
         await driver.wait(until.titleContains('Selenium WebDriver'), 1000);
         const title = await driver.getTitle();
