@@ -5,9 +5,9 @@ app = Flask(__name__)
 
 #to be filled with server connection info, was configured for localhost
 db = mysql.connector.connect(
-    host = "",
-    user = "",
-    password = "",
+    host = "localhost", #10.55.0.200
+    user = "root",
+    password = "123",
     database = "SelfService"
 )
 
