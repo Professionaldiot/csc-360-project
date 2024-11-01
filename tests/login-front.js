@@ -23,7 +23,8 @@ describe('Google Search Test', function() {
 
     //This is the test. Right now it is doing unimport things.
     it('should open Google and search for Selenium WebDriver', async function() {
-        await driver.findElement(By.name('q')).sendKeys('Selenium WebDriver', Key.RETURN);
+        await driver.findElement(By.id('filled-required')).sendKeys('test', Key.RETURN);
+        await driver.findElement(By.id('filled-required')).contains();
         await driver.wait(until.titleContains('Selenium WebDriver'), 1000);
         const title = await driver.getTitle();
         assert.strictEqual(title.includes('Selenium WebDriver'), true);
