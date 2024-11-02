@@ -5,8 +5,8 @@ import {Keys, By} from org.openqa.selenium;
 import assert from 'node:assert';
 //May need to add import for Builder of some sort...?
 
-//This creates a test with the name Google Search Test that will be recognized by mocha reports.
-describe('Username interaction', function() {
+//This creates a test with the name Username Interaction that will be recognized by mocha reports.
+describe('Username Interaction', function() {
     let driver; //Initializing driver in scope of function.
     this.timeout(30000); //Leaves time for tests to occur. May need to change later.
 
