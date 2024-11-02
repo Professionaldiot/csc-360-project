@@ -1,9 +1,7 @@
-import java.net.URL;
-import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.remote.RemoteWebDriver;
-import org.openqa.selenium.support.ui;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.By;
+import URL from java.net;
+import {RemoteWebDriver, DesiredCapabilities} from org.openqa.selenium.remote;
+import until from org.openqa.selenium.support.ui;
+import {Keys, By} from org.openqa.selenium;
 import assert from 'node:assert';
 //May need to add import for Builder of some sort...?
 
@@ -14,7 +12,7 @@ describe('Username interaction', function() {
 
     //This sets up a web driver to run on localhost on internet explorer before the test.
     before(async function() {
-        DesiredCapabilities capability = DesiredCapabilities.internetExplorer();
+        const capability = DesiredCapabilities.internetExplorer();
         driver = new RemoteWebDriver(new URL("http://127.0.0.1:8080/wd/hub"), capability); //The url is for the local host. This may change depending on the localhost actually used.
     });
 
