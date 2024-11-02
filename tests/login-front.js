@@ -1,9 +1,11 @@
 import java.net.URL;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
-
-const { Builder, By, Key, until } = require('selenium-webdriver');
-const assert = require('assert');
+import org.openqa.selenium.support.ui;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.By;
+import assert from 'node:assert/strict';
+//May need to add import for Builder of some sort...?
 
 //This creates a test with the name Google Search Test that will be recognized by mocha reports.
 describe('Google Search Test', function() {
