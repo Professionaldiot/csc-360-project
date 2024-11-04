@@ -8,6 +8,7 @@ import Button from '@mui/material/Button';
 import { Card, CardActions, CardContent, Typography } from '@mui/material';
 import FilledInput from '@mui/material/FilledInput';
 import InputLabel from '@mui/material/InputLabel';
+import Avatar from '@mui/material/Avatar';
 
 
 function EmptyUser() {
@@ -63,7 +64,7 @@ function App() {
           <p>Courses</p>
         </div>
         <div className='selfService-Header'>
-          <p>Login</p>
+          <Avatar alt="Login" sx = {{width: 56, height: 56}}/>
         </div>
       </div>
 
