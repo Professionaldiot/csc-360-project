@@ -43,6 +43,7 @@
   align-items: center;
   font-family: 'Times New Roman', Times, serif;
   max-height: 100vmin;
+  
 }
 
 .loginBack {
@@ -61,7 +62,12 @@
 }
 
 .textField {
-  margin-top: 12px;
+  margin-top: 13px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  
 }
 
 
