@@ -1,0 +1,37 @@
+name: Run Node.js File
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'v21.0.0' # Specify your Node.js version
+          cache: 'npm'
+
+      - name: Add chrome
+        uses: browser-actions/setup-chrome@v1
+        with:
+          install-dependencies: true
+
+      - name: Add chromedriver
+        uses: nanasess/setup-chromedriver@v2
+        
+      - name: Install node
+        run: npm install
+      
+      - name: Run Selenium tests and generate report
+        run: npx mocha testing.js --reporter mochawesome --reporter-options reportDir=Test-for-Selenium,reportFilename=index,quiet=true
+      - name: Upload Mochawesome report
+        uses: actions/upload-artifact@v4
+        with:
+          name: Test-for-Selenium
+          path: Test-for-Selenium
