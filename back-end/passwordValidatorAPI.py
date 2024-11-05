@@ -1,10 +1,10 @@
 from flask import Flask, request
-import mysql.connector
+import mysql.connector as conn
 
 app = Flask(__name__)
 
-#to be filled with server connection info, was configured for localhost
-db = mysql.connector.connect(
+#connect to existing MySQL server on the VM on the department server
+db = conn.connect(
     host="10.101.128.56",
     port="6033",
     user="username",
@@ -23,12 +23,15 @@ def validateLogin():
     username = data.get("username")
     password = data.get("password")
 
-    cursor.execute("SELECT (passcode) FROM users WHERE user_name = (%s);", (username,))
+    cursor.execute("SELECT (passcode, user_type) FROM Users WHERE user_name = (%s);", (username,))
     result = cursor.fetchone()
     
     try:
         if password == result[0]:
-            return {"success": True}
+            return {
+                "success": True,
+                "user_type": result[1]
+                }
         
     except:
         return {"success": False}
