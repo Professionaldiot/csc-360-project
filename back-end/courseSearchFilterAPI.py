@@ -5,16 +5,11 @@ app = Flask(__name__)
 
 #connect to existing MySQL server on the VM on the department server
 db = conn.connect(
-    # host="10.101.128.56",
-    # port="6033",
-    # user="username",
-    # password="123",
-    # database="SelfService"
-    
-    host = "localhost",
-    user = "root",
-    password = "123",
-    database = "SelfService"
+    host="10.101.128.56",
+    port="6033",
+    user="username",
+    password="123",
+    database="SelfService"
     )
 
 cursor = db.cursor()
@@ -26,20 +21,29 @@ def searchCourseDatabase(): #formats course data, and returns it for display
     block = searchParameters.get("block")
     department = searchParameters.get("department")
     
-    query = formatQuery(block, department)
+    rawCourses = fetchCourses(block, department)
     
-    cursor.execute(query, ())
-    result = cursor.fetchall()
-    
-    coursesJSON = formatCourseData(result)
+    coursesJSON = formatCourseData(rawCourses)
     
     return coursesJSON
     
-def formatQuery(block = None, department = None): #returns proper MySQL query for the selected filters
+def fetchCourses(block = None, department = None): #returns raw course data retrieved from MySQL
     
-    #11/5: to be written by Marley
-    #function will likely be vulnerable to SQL injection, something to address soon-ish
-    return "SELECT * FROM Courses" #will return properly formatted SQL query as a string
+    if block == None and department == None:
+       cursor.execute("SELECT * FROM Courses")
+       
+    elif block == None :
+        cursor.execute("SELECT * FROM Courses WHERE departments = %s;", (department,))
+        
+    elif department == None:
+        cursor.execute("SELECT * FROM Courses WHERE block = %s;", (block,))
+        
+    else:
+        cursor.execute("SELECT * FROM Courses WHERE department = %s AND block = %s", (department, block))
+        
+    result = cursor.fetchall()
+    
+    return result #will return list of raw course data
 
 #takes raw course data from SELECT query, returns it formatted as a JSON containing all course properties from the database
 def formatCourseData(rawCoursesList):
@@ -48,14 +52,13 @@ def formatCourseData(rawCoursesList):
     
     for rawCourse in rawCoursesList:
         courseData = { #every feild from returned course data
-            "ID": rawCourse[0], #course ID number
-            "name": rawCourse[1]
-            # "courseCode": ,
-            # "name": ,
-            # "description": ,
-            # "block": ,
-            # "department": ,
-            # "teacher": ,
+            "course_code": rawCourse[0], #course ID number
+            "course_name": rawCourse[1],
+            "block_num": rawCourse[2],
+            "course_year": rawCourse[3],
+            "course_description": rawCourse[4],
+            "department_id": rawCourse[5],
+            "faculty_id": rawCourse[6]
         }
         
         formattedCourses.append(courseData)
