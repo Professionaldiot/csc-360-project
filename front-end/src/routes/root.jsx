@@ -10,7 +10,6 @@ import FilledInput from '@mui/material/FilledInput';
 import InputLabel from '@mui/material/InputLabel';
 import Avatar from '@mui/material/Avatar';
 import { Outlet, Link } from 'react-router-dom'
-import Menu from '@mui/material/Menu';
 
 
 export default function Root() {
@@ -26,10 +25,10 @@ export default function Root() {
                     alt="logo" />
                 </div>
                 <div className='subHeader'>
-                    <Button onClick={() => {window.location.href = "/courses";}}>Courses</Button>
+                <Link to={'courses'}><p>Courses</p></Link>
                 </div>
                 <div className='selfService-Header'>
-                    <Link to={'login'}><Avatar alt="Login" sx = {{width: 56, height: 56}}/></Link>
+                <Link to={'login'}><Avatar alt="Login" sx = {{width: 56, height: 56}}/></Link>
                 </div>
                 <div id='detail'>
                     <Outlet/>
