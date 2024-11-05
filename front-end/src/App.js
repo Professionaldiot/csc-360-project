@@ -10,7 +10,6 @@ import FilledInput from '@mui/material/FilledInput';
 import InputLabel from '@mui/material/InputLabel';
 import Avatar from '@mui/material/Avatar';
 
-
 function EmptyUser() {
   /*
   this function is using materialUI's value.filled
