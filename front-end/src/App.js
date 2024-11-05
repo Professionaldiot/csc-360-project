@@ -9,6 +9,7 @@ import { Card, CardActions, CardContent, Typography } from '@mui/material';
 import FilledInput from '@mui/material/FilledInput';
 import InputLabel from '@mui/material/InputLabel';
 import Avatar from '@mui/material/Avatar';
+import fetchLogin from './functions/fetchLogin';
 
 
 function EmptyUser() {
@@ -49,6 +50,22 @@ function EmptyPassword() {
 
 // main function, runs the HTML stuff
 function App() {
+
+  const [values, setValues] = React.useState({
+    username: "",
+    password: ""
+  });
+
+  const handleChange = (prop) => (event) => {
+      setValues({ ...values, [prop]: event.target.value });
+  };
+
+  const handleFormSubmit = (event) => {
+    event.preventDefault();
+    console.log(values.username, " ", values.password)
+    //fetchLogin(values.username, values.password);
+  };
+
   return (
     <>
       {/*Header business here*/}
@@ -70,7 +87,13 @@ function App() {
 
       {/*All login stuff in this <div>*/}
       <div className='loginBack'>
-        <Box sx={{ justifyContent: 'space-around', alignItems: 'center', position: "absolute", top: '50px' }}>
+        <Box 
+        sx={{ justifyContent: 'space-around', 
+              alignItems: 'center', 
+              position: "absolute", 
+              top: '50px' }}
+              component="form"
+              onSubmit={handleFormSubmit}>
           <Card sx={{ backgroundColor: '#00000025', height: '350px', width: '375px'}}>
             <CardContent>
               <Typography variant="h3" component="div" sx={{ textAlign: "center"}}>
@@ -82,6 +105,9 @@ function App() {
                     <InputLabel htmlFor="filled-adornment-password">Username</InputLabel>
                       <FilledInput
                         id="login-username"
+                        value={values.username}
+                        onChange={handleChange("username")}
+                        required
                       />
                     <EmptyUser />
                   </FormControl>
@@ -91,6 +117,8 @@ function App() {
                       <FilledInput
                         id="login-password"
                         type='password'
+                        value={values.password}
+                        onChange={handleChange("password")}
                       />
                     <EmptyPassword />
                   </FormControl>
@@ -98,7 +126,9 @@ function App() {
             </CardContent>
             <div className='textField'>
               <CardActions sx={{ alignItems: "center", justifyContent: "space-around"}}>
-                <Button variant="outlined">Login</Button>
+                <Button type="submit" variant="contained">
+                    Sign in
+                </Button>
                 <Button variant="outlined">Guest</Button>
               </CardActions>
             </div>
