@@ -6,9 +6,9 @@ import json
 
 #connect to existing MySQL server on the VM on the department server
 db = conn.connect(
-    host="localhost",
-    #port="5000",
-    user="root", #"username",
+    host="10.101.128.56",
+    port="6033",
+    user="username",
     password="123",
     database="SelfService"
     )
@@ -22,7 +22,7 @@ def searchCourseDatabase(): #formats course data, and returns it for display
     block = data.get("block")
     department = data.get("department")
     search = data.get("search")
-    
+   
     searchInfo = {
         "search" : search, 
         "block" : block, 
@@ -99,7 +99,7 @@ def formatCourseData(rawCoursesList):
     formattedCourses = []
     
     for rawCourse in rawCoursesList:
-        courseData = { #every feild from returned course data
+        courseData = { 
             "courseCode": rawCourse[0], #course ID number
             "courseName": rawCourse[1],
             "blockNum": rawCourse[2],
