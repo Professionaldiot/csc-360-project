@@ -16,7 +16,7 @@ cursor = db.cursor()
 
 #Recieves JSON packet containing username and password from login page, returns a boolean value based on if the login information is valid or not
 #retrieves passcode from MySQL database based on username and checks the provided password against it
-@app.post("/validate")
+@app.route("/validate", methods=['POST'])
 def validateLogin():
 
     data = request.get_json()
@@ -38,4 +38,4 @@ def validateLogin():
         
     return {"success": False}
 
-app.run()
+app.run(host="10.55.0.201", port=5000)
