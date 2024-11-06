@@ -6,7 +6,7 @@ app = Flask(__name__)
 db = conn.connect(
     host="localhost",
     port="5000",
-    user="username", #root
+    user="username",
     password="123",
     database="SelfService"
     )
@@ -23,7 +23,16 @@ def searchCourses():
     data = request.get_json()
     return searchCourseDatabase(cursor, data)
 
-#put get department function here too
+@app.route("/getDepartment", methods =['POST','GET']) #Gets the request for department filter data
+#When the department filter is selected, it goes into the database
+#and gets the department ID and department name, so the data
+#is passed in json form and the front-end can display the department
+#with knowing the department ID
+def getDepartment():
+    cursor.execute("SELECT department, department_id FROM departments")
+    result = cursor.fetchall()
+    departments_Data = [{"departmentID": row[0], "departmentName": row[1]} for row in result]
+    return jsonify(departments_Data)
 
 def validate(cur, data):
 
@@ -75,20 +84,14 @@ def writeQuery(searchParameters):
     query = "SELECT * FROM Courses" #starting point to be added to
     clauses = []
     
-    if searchParameters["search"] is not "": #add LIKE [search]
-        clauses.append(" (course_name LIKE '%" + str(searchParameters["search"]) + "%' OR course_code LIKE '%" + str(searchParameters["search"]) + "%')")
-       
-    print(query, clauses)    
+    if searchParameters["search"] != "": #add LIKE [search]
+        clauses.append(" (course_name LIKE '%" + str(searchParameters["search"]) + "%' OR course_code LIKE '%" + str(searchParameters["search"]) + "%')") 
         
-    if searchParameters["block"] is not "": #add where block is [block]
+    if searchParameters["block"] != "": #add where block is [block]
         clauses.append(" block_num = '" + str(searchParameters["block"]) + "'")
-        
-    print(query, clauses)
     
-    if searchParameters["department"] is not "": #add where department is [department]
+    if searchParameters["department"] != "": #add where department is [department]
         clauses.append(" department_id = '" + str(searchParameters["department"]) + "'")
-        
-    print(query, clauses)
     
     if len(clauses) > 0:
         query = query + " WHERE"
@@ -102,8 +105,6 @@ def writeQuery(searchParameters):
             count += 1 #increment count to show that AND is needed
         
     query = query + ";"
-    
-    print (query)
     
     return query
 
