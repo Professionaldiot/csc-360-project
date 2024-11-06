@@ -6,7 +6,7 @@ boolean (and eventually a user role if true)
 */
 async function fetchLogin(user, pass) {
 
-    if (length(user)>32 || length(pass)>32) {
+    if (user.length>32 || pass.length>32) {
         return false
     }
     try {
