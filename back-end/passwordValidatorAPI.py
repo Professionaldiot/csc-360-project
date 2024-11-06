@@ -5,8 +5,8 @@ app = Flask(__name__)
 
 #connect to existing MySQL server on the VM on the department server
 db = conn.connect(
-    host="10.101.128.56",
-    port="6033",
+    host="localhost",
+    port="5000",
     user="username",
     password="123",
     database="SelfService"
