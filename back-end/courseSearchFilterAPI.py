@@ -1,5 +1,6 @@
 from flask import Flask, request
 import mysql.connector as conn
+import json
 
 #app = Flask(__name__)
 
@@ -99,19 +100,19 @@ def formatCourseData(rawCoursesList):
     
     for rawCourse in rawCoursesList:
         courseData = { #every feild from returned course data
-            "course_code": rawCourse[0], #course ID number
-            "course_name": rawCourse[1],
-            "block_num": rawCourse[2],
-            "course_year": rawCourse[3],
-            "course_description": rawCourse[4],
-            "department_id": rawCourse[5],
-            "faculty_id": rawCourse[6]
+            "courseCode": rawCourse[0], #course ID number
+            "courseName": rawCourse[1],
+            "blockNum": rawCourse[2],
+            "courseYear": rawCourse[3],
+            "courseDescription": rawCourse[4],
+            "departmentID": rawCourse[5],
+            "facultyID": rawCourse[6]
         }
         
         formattedCourses.append(courseData)
 
-    print (formattedCourses)
+    courseJSON = json.dumps(formattedCourses)
     
-    return formattedCourses
+    return courseJSON
 
 #app.run()

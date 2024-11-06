@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
 import mysql.connector as conn
+import json
 
 app = Flask(__name__)
 
@@ -46,7 +47,7 @@ def validate(cur, data):
         if password == result[0]:
             return {
                 "success": True,
-                "user_type": result[1]
+                "userType": result[1]
                 }
         
     except:
@@ -54,7 +55,7 @@ def validate(cur, data):
         
     return {"success": False}
 
-def searchCourseDatabase(cur, data): #formats course data, and returns it for display
+def searchCourseDatabase(cur, data): #searches the course database based on the provided search parameters (data)
     
     block = data.get("block")
     department = data.get("department")
@@ -71,10 +72,7 @@ def searchCourseDatabase(cur, data): #formats course data, and returns it for di
     cur.execute(query)
     rawCourses = cur.fetchall()
     
-    print(query)
-    print (rawCourses)
-    
-    coursesJSON = jsonify(rawCourses) #searchAPI.formatCourseData(rawCourses)
+    coursesJSON = formatCourseData(rawCourses) #take raw course data and format it for return as JSON
     
     return coursesJSON
 
@@ -107,5 +105,27 @@ def writeQuery(searchParameters):
     query = query + ";"
     
     return query
+
+#takes raw course data from SELECT query, returns it formatted as a JSON containing all course properties from the database
+def formatCourseData(rawCoursesList):
+    
+    formattedCourses = []
+    
+    for rawCourse in rawCoursesList:
+        courseData = { #every feild from returned course data
+            "courseCode": rawCourse[0], #course ID number
+            "courseName": rawCourse[1],
+            "blockNum": rawCourse[2],
+            "courseYear": rawCourse[3],
+            "courseDescription": rawCourse[4],
+            "departmentID": rawCourse[5],
+            "facultyID": rawCourse[6]
+        }
+        
+        formattedCourses.append(courseData)
+
+    courseJSON = json.dumps(formattedCourses)
+    
+    return courseJSON
 
 app.run(host="10.55.0.201", port=5000)
