@@ -5,6 +5,9 @@ mysql server.  takes in username and pass, returns
 boolean (and eventually a user role if true)
 */
 async function fetchLogin(user, pass) {
+    if (length(user)>32 || length(pass)>32) {
+        return false
+    }
     try {
         /* note for url: this is what the URL is supposed to be, was not working as of creation */
         const url = "http://10.101.128.56:5000/validate"
