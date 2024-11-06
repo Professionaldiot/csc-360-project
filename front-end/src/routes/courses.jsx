@@ -10,12 +10,37 @@ import FilledInput from '@mui/material/FilledInput';
 import InputLabel from '@mui/material/InputLabel';
 import Avatar from '@mui/material/Avatar';
 import { Outlet, Link } from 'react-router-dom'
+import Menu from '@mui/material/Menu';
 
 export default function Courses() {
     return(
         <>
             <div className='loginBack'>
-                <p>hello world!</p>
+                <Box component='section' sx={{ justifyContent: 'space-between', alignItems: 'end', position: "absolute", top: '25px' }}>
+                    <Typography variant='h3' component='div' sx={{ textAlign: 'Left', marginLeft: '48px' }}>Courses</Typography>
+                    <br/>
+                    <Card sx={{ width: '1000px', float: 'left', marginRight: "48px", marginLeft: '48px'}}>
+                        <CardContent sx={{ justifyContent: 'space-between' }}>
+                            <TextField
+                                id="filled-search"
+                                label="Search"
+                                type="search"
+                                variant="filled"
+                                sx={{ width: '80%' }}
+                            />
+                            <Button variant='outlined' sx={{ height: '8vmin', position: 'absolute', float: 'right' }}>Search</Button>
+                        </CardContent>
+                    </Card>
+
+                    <Card sx={{ width: '360px', float: 'right' }}>
+                        <CardContent>
+                            <Typography variant="h5" component="div" sx={{ textAlign: "center" }}>
+                                Filter Search
+                            </Typography>
+                            
+                        </CardContent>
+                    </Card>
+                </Box>
             </div>
 
         </>
