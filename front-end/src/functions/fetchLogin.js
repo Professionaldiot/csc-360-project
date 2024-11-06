@@ -5,6 +5,7 @@ mysql server.  takes in username and pass, returns
 boolean (and eventually a user role if true)
 */
 async function fetchLogin(user, pass) {
+
     if (length(user)>32 || length(pass)>32) {
         return false
     }
