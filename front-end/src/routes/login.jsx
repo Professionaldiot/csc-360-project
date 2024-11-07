@@ -9,6 +9,8 @@ import FilledInput from '@mui/material/FilledInput';
 import InputLabel from '@mui/material/InputLabel';
 import fetchLogin from '../functions/fetchLogin';
 
+let loggedIn = false;
+
 function EmptyUser() {
    /*
    this function is using materialUI's value.filled
@@ -91,8 +93,8 @@ export default function Login() {
     if (willLogin.success) {
       userLevel=willLogin.user_type;
       console.log(userLevel);
+      loggedIn=true
       window.location.href = "/courses";
-      console.log("yes");
     }
     else {
       console.log("no");
@@ -145,7 +147,7 @@ export default function Login() {
                     <Button type="submit" variant="contained">
                         Sign in
                     </Button>
-                    <Button variant="outlined">Guest</Button>
+                    <Button variant="outlined" onClick={() => {window.location.href = "/courses"}} >Guest</Button>
                   </CardActions>
                 </div>
               </Card>
