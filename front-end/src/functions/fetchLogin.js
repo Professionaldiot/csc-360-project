@@ -23,7 +23,7 @@ async function fetchLogin(user, pass) {
         })
         const res = await req.json()
         // note: this currently returns a boolean, probably changed later
-        return [res.success, res.user_type] // change to just res later once user role return is implemented
+        return res // change to just res later once user role return is implemented
     } catch (error) {
         console.error('Error:', error);
         return null;

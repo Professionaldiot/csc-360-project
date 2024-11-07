@@ -82,14 +82,16 @@ export default function Login() {
     result of fetchLogin() (which is a list) to
     access later, it then checks the first item
     of that list, which is the boolean stating 
-    whether the login info is correct
+    whether the login info is correct.
+    it will also bring you to the courses
     */
     event.preventDefault();
     const willLogin = await fetchLogin(values.username, values.password);
     console.log(values.username, " ", values.password);
-    if (willLogin[0]) {
-      userLevel=willLogin[1];
+    if (willLogin.success) {
+      userLevel=willLogin.user_type;
       console.log(userLevel);
+      window.location.href = "/courses";
       console.log("yes");
     }
     else {
