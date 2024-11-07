@@ -1,7 +1,7 @@
 import './App.css';
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import { createTheme, FormHelperText } from '@mui/material';
+import FormHelperText  from '@mui/material/FormHelperText';
 import FormControl, {useFormControl} from '@mui/material/FormControl';
 import Button from '@mui/material/Button';
 import { Card, CardActions, CardContent, Typography } from '@mui/material';
@@ -46,31 +46,50 @@ function EmptyUser() {
 
 export default function Login() {
 
+  /*
+  better to have a default value for this
+  rather than an empty string, so we set
+  it to "student" just in case.
+  */
+  let userLevel = "student"; 
+
   const [values, setValues] = React.useState({
+    /*
+    this function lets the program update 
+    what the user puts in the username &
+    password boxs
+    */
     username: "",
     password: ""
   });
 
   const handleChange = (prop) => (event) => {
+    /* 
+    this function changes the above const
+    values, it does this mostly through MUI,
+    we just have to call it
+    */
     setValues({ ...values, [prop]: event.target.value });
   };  
 
-  const loginValidate = async (username, password) => {
-    console.log(username + " " + password);
-    try {
-      const validation = await fetchLogin(username,password);
-      return validation;
-    } catch(error) {
-      console.error("Error fetching login", error);
-    }
-  }
-
-
-  const handleFormSubmit = (event) => {
+  const handleFormSubmit = async (event) => {
+    /*
+    this function will stop you from not putting
+    anything in the boxes first, then if they both
+    have something in it (it's both because of a
+    required tag in the JSX), then it stores the 
+    result of fetchLogin() (which is a list) to
+    access later, it then checks the first item
+    of that list, which is the boolean stating 
+    whether the login info is correct
+    */
     event.preventDefault();
-    //console.log(values.username, " ", values.password);
-    if (loginValidate(values.username,values.password)===true) {
-      console.log('yes')
+    const willLogin = await fetchLogin(values.username, values.password);
+    console.log(values.username, " ", values.password);
+    if (willLogin[0]) {
+      userLevel=willLogin[1];
+      console.log(userLevel);
+      console.log("yes");
     }
     else {
       console.log("no");
