@@ -1,12 +1,14 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 import mysql.connector as conn
 import json
 
 app = Flask(__name__)
+CORS(app)
 
 db = conn.connect(
-    host="localhost",
-    port="5000",
+    host="10.101.128.56",
+    port="6033",
     user="username",
     password="123",
     database="SelfService"
@@ -40,14 +42,14 @@ def validate(cur, data):
     username = data.get("username")
     password = data.get("password")
 
-    cur.execute("SELECT (passcode, user_type) FROM Users WHERE user_name = (%s);", (username,))
+    cur.execute("SELECT passcode, user_type FROM Users WHERE user_name = (%s);", (username,))
     result = cursor.fetchone()
     
     try:
         if password == result[0]:
             return {
                 "success": True,
-                "userType": result[1]
+                "user_type": result[1]
                 }
         
     except:
@@ -128,4 +130,4 @@ def formatCourseData(rawCoursesList):
     
     return courseJSON
 
-app.run(host="10.55.0.201", port=5000)
+app.run(host="0.0.0.0", port=5000)
