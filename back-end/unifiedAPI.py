@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 import mysql.connector as conn
 import json
 from flask_cors import CORS
@@ -7,8 +8,8 @@ app = Flask(__name__)
 CORS(app) #allows for cross-origin resource sharing
 
 db = conn.connect(
-    host="localhost",
-    port="5000",
+    host="10.101.128.56",
+    port="6033",
     user="username",
     password="123",
     database="SelfService"
@@ -143,4 +144,4 @@ def formatCourseData(rawCoursesList):
     
     return courseJSON
 
-app.run(host="10.55.0.201", port=5000)
+app.run(host="0.0.0.0", port=5000)
