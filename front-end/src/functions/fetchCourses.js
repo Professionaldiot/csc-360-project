@@ -1,5 +1,8 @@
-
-
+/*
+Fetch function for searching courses.
+Takes a search string, block #, and department as inputs,
+returns a list of course objects.
+*/
 async function fetchCourses(search, blockNum, department) {
     try {
 
