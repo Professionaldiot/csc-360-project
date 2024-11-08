@@ -33,7 +33,7 @@ def searchCourses():
 #is passed in json form and the front-end can display the department
 #with knowing the department ID
 def getDepartment():
-    cursor.execute("SELECT department, department_id FROM departments")
+    cursor.execute("SELECT department_name, department_id FROM Departments")
     result = cursor.fetchall()
     departments_Data = [{"departmentID": row[0], "departmentName": row[1]} for row in result]
     return jsonify(departments_Data)
@@ -43,8 +43,10 @@ def getRegisteredCourses():
     data = request.get_json()
     student_id = data.get('studentID')
     
-    cursor.execute('SELECT course_code FROM RegisteredCourses WHERE student_id = (%s)', (student_id,))
-    result = cursor.fetchall()
+    cursor.execute('SELECT course_code FROM CourseRegistration WHERE student_id = (%s)', (student_id,))
+    courseCodes = cursor.fetchall()
+    
+    result = processCourseCodes(courseCodes)
     
     return result
 
@@ -84,6 +86,7 @@ def searchCourseDatabase(cur, data): #searches the course database based on the 
     query = writeQuery(searchInfo)
     
     cur.execute(query)
+    
     rawCourses = cur.fetchall()
     
     coursesJSON = formatCourseData(rawCourses) #take raw course data and format it for return as JSON
@@ -96,14 +99,18 @@ def writeQuery(searchParameters):
     query = "SELECT * FROM Courses" #starting point to be added to
     clauses = []
     
-    if searchParameters["search"] != "": #add LIKE [search]
-        clauses.append(" (course_name LIKE '%" + str(searchParameters["search"]) + "%' OR course_code LIKE '%" + str(searchParameters["search"]) + "%')") 
-        
-    if searchParameters["block"] != "": #add where block is [block]
-        clauses.append(" block_num = '" + str(searchParameters["block"]) + "'")
+    search = searchParameters["search"]
+    block = searchParameters["block"]
+    department = searchParameters["department"]
     
-    if searchParameters["department"] != "": #add where department is [department]
-        clauses.append(" department_id = '" + str(searchParameters["department"]) + "'")
+    if search != "" and search != None: #add LIKE [search]
+        clauses.append(" (course_name LIKE '%" + str(search) + "%' OR course_code LIKE '%" + str(search) + "%')") 
+        
+    if block != "" and block != None: #add where block is [block]
+        clauses.append(" block_num = '" + str(block) + "'")
+    
+    if department != "" and department != None: #add where department is [department]
+        clauses.append(" department_id = '" + str(department) + "'")
     
     if len(clauses) > 0:
         query = query + " WHERE"
@@ -144,6 +151,31 @@ def formatCourseData(rawCoursesList):
     
     return courseJSON
 
+def processCourseCodes(courseCodes):
+
+    courseInfo = []
+
+    for courseCode in courseCodes:
+        # Prepare the query to fetch course data for each in the given list of course IDs
+        query = "SELECT * FROM Courses WHERE course_code IN (%s)" 
+
+        # Execute the query
+        cursor.execute(query, courseCode)
+
+        # Fetch results
+        result = cursor.fetchone()
+        
+        courseInfo.append(result)
+    
+    #format results as JSON
+    courses = formatCourseData(courseInfo)
+    
+    return courses
+        
+
 app.run(host="0.0.0.0", port=5000)
 
 db.commit() #makes database changes permanent
+
+cursor.close()
+db.close()
