@@ -20,22 +20,36 @@ import { positions } from '@mui/system';
 import fetchSchedule from "../functions/fetchSchedule.js";
 import {UserContext} from "./root.jsx";
 
+const Item = styled(Paper)(({ theme }) => ({
+    backgroundColor: '#fff',
+    ...theme.typography.body2,
+    padding: theme.spacing(1),
+    textAlign: 'center',
+    color: theme.palette.text.secondary,
+    ...theme.applyStyles('dark', {
+        backgroundColor: '#1A2027',
+    }),
+}));
+
 export default function Schedule() {
     let userT = "student";
     let userID = "1"
     const studentCourses = fetchSchedule(userID);
+    console.log(studentCourses);
     console.log(userID);
     if (userT === "student") {
         // Show schedule page
         return (
             <>
-                    <Box component='section'
-                    sx={{ justifyContent: 'space-between', alignItems: 'end',
-                    position: "absolute", left: '10%', top: '20%', overflow: 'auto' }}>
-                    <div>
-                        hello john
-                    </div>    
+                <div className="loginBack">
+                    <Box
+                        sx={{ justifyContent: 'space-around', alignItems: 'end',
+                        position: "absolute", left: '10%', top: '13%', overflow: 'auto' }}>
+                            <Stack spacing={2} sx={{ float: 'left', marginLeft: '48px', width: '200px', textAlign: 'left' }}>
+                                <Item sx={{ height: '28px' }}>BIO-180: BLOCK-2</Item>
+                            </Stack>
                     </Box>
+                </div>
             </>
         )
     }
