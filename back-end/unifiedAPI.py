@@ -17,12 +17,12 @@ db = conn.connect(
 
 cursor = db.cursor()
 
-@app.route("/validate", methods=['POST'])
+@app.route("/validate", methods=['POST']) #takes username and password and validates login
 def validateLogin():
     data = request.get_json()
     return validate(cursor, data)
     
-@app.route("/search", methods=['POST'])
+@app.route("/search", methods=['POST']) #searches course database based on given search parameters
 def searchCourses():
     data = request.get_json()
     return searchCourseDatabase(cursor, data)
