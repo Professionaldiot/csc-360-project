@@ -8,6 +8,7 @@ import Root from './routes/root'
 import Login from './routes/login';
 import Courses from './routes/courses';
 import Error from './routes/error';
+import Schedule from './routes/schedule';
 
 const router = createBrowserRouter([
   {
@@ -29,6 +30,10 @@ const router = createBrowserRouter([
       {
         path: "/*",
         element: <Error />,
+      },
+      {
+        path: "/schedule",
+        element: <Schedule />,
       }
     ],
   },

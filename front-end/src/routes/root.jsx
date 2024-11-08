@@ -27,6 +27,7 @@ export default function Root() {
                 </div>
                 <div className='subHeader'>
                     <Button onClick={() => {window.location.href = "/courses";}}>Courses</Button>
+                    <Button onClick={() => {window.location.href = "/schedule";}}>Schedule</Button>
                 </div>
                 <div className='selfService-Header'>
                     <Link to={'login'}><Avatar alt="Login" sx = {{width: 56, height: 56}}/></Link>
