@@ -2,9 +2,10 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import mysql.connector as conn
 import json
+from flask_cors import CORS
 
 app = Flask(__name__)
-CORS(app)
+CORS(app) #allows for cross-origin resource sharing
 
 db = conn.connect(
     host="10.101.128.56",
@@ -37,19 +38,30 @@ def getDepartment():
     departments_Data = [{"departmentID": row[0], "departmentName": row[1]} for row in result]
     return jsonify(departments_Data)
 
-def validate(cur, data):
+@app.route("/getRegisteredCourses", methods=['POST']) #takes a student's user id, returns list of course codes
+def getRegisteredCourses():
+    data = request.get_json()
+    student_id = data.get('studentID')
+    
+    cursor.execute('SELECT course_code FROM RegisteredCourses WHERE student_id = (%s)', (student_id,))
+    
+    result = cursor.fetchall()
+    return result
+
+def validate(cur, data): #validate password in users table based on given username and password info
 
     username = data.get("username")
     password = data.get("password")
 
-    cur.execute("SELECT passcode, user_type FROM Users WHERE user_name = (%s);", (username,))
+    cur.execute("SELECT passcode, user_type, user_id FROM Users WHERE user_name = (%s);", (username,))
     result = cursor.fetchone()
     
     try:
         if password == result[0]:
             return {
                 "success": True,
-                "user_type": result[1]
+                "userType": result[1],
+                "userID": result[2]
                 }
         
     except:
@@ -115,13 +127,15 @@ def formatCourseData(rawCoursesList):
     
     for rawCourse in rawCoursesList:
         courseData = { #every feild from returned course data
-            "courseCode": rawCourse[0], #course ID number
+            "courseCode": rawCourse[0],
             "courseName": rawCourse[1],
             "blockNum": rawCourse[2],
             "courseYear": rawCourse[3],
             "courseDescription": rawCourse[4],
             "departmentID": rawCourse[5],
-            "facultyID": rawCourse[6]
+            "facultyID": rawCourse[6],
+            "maxCapacity": rawCourse[7],
+            "currentCapacity": rawCourse [8]
         }
         
         formattedCourses.append(courseData)
