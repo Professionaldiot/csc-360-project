@@ -7,7 +7,6 @@ CREATE TABLE Users (
     user_type varchar(127),
     PRIMARY KEY (user_ID)
 );
-
 INSERT INTO Users (user_ID, user_name, passcode, user_type)
 VALUES
 (1, "jsmith", "P@ss1234", "student"),
