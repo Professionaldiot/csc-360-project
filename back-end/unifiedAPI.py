@@ -43,7 +43,19 @@ def getRegisteredCourses():
     data = request.get_json()
     student_id = data.get('studentID')
     
-    cursor.execute('SELECT course_code FROM CourseRegistration WHERE student_id = (%s)', (student_id,))
+    cursor.execute('SELECT course_code FROM CourseRegistration WHERE student_id = (%s);', (student_id,))
+    courseCodes = cursor.fetchall()
+    
+    result = processCourseCodes(courseCodes)
+    
+    return result
+
+@app.route("/getFacultyCourses", methods=['POST']) #takes a faculty's user id, returns list of course codes
+def getFacultyCourses():
+    data = request.get_json()
+    faculty_id = data.get('facultyID')
+    
+    cursor.execute('SELECT course_code FROM Courses WHERE faculty_id = (%s);', (faculty_id,))
     courseCodes = cursor.fetchall()
     
     result = processCourseCodes(courseCodes)
@@ -158,6 +170,7 @@ def processCourseCodes(courseCodes):
     for courseCode in courseCodes:
         # Prepare the query to fetch course data for each in the given list of course IDs
         query = "SELECT * FROM Courses WHERE course_code IN (%s)" 
+        #there is almost definitely a way to do this for all of the ids at once, but i havent figured it out yet
 
         # Execute the query
         cursor.execute(query, courseCode)
@@ -170,8 +183,8 @@ def processCourseCodes(courseCodes):
     #format results as JSON
     courses = formatCourseData(courseInfo)
     
-    return courses
-        
+    return courses 
+
 
 app.run(host="0.0.0.0", port=5000)
 
