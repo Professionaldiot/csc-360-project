@@ -1,5 +1,8 @@
-
-
+/*
+Fetch function for grabbing a list of objects containing
+department names and their respective ID numbers
+(ID numbers are used for search)
+*/
 async function fetchDepartments() {
     try {
         const url = "10.101.128.56:5000/getDepartments"
