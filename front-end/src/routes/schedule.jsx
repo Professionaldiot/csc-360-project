@@ -17,12 +17,14 @@ import Stack from '@mui/material/Stack';
 import { styled } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
 import { positions } from '@mui/system';
+import fetchSchedule from "../functions/fetchSchedule.js";
+import {UserContext} from "./root.jsx";
 
 export default function Schedule() {
-    let userT = "faculty";
+    let userT = "student";
     let userID = "1"
-    let studentCourses = getRegisteredCourses(userID)
-
+    const studentCourses = fetchSchedule(userID);
+    console.log(userID);
     if (userT === "student") {
         // Show schedule page
         return (
@@ -31,7 +33,7 @@ export default function Schedule() {
                     sx={{ justifyContent: 'space-between', alignItems: 'end',
                     position: "absolute", left: '10%', top: '20%', overflow: 'auto' }}>
                     <div>
-                        
+                        hello john
                     </div>    
                     </Box>
             </>
