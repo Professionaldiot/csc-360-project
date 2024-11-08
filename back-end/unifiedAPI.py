@@ -12,7 +12,7 @@ db = conn.connect(
     user="username",
     password="123",
     database="SelfService"
-    )
+)
 
 cursor = db.cursor()
 
@@ -43,8 +43,8 @@ def getRegisteredCourses():
     student_id = data.get('studentID')
     
     cursor.execute('SELECT course_code FROM RegisteredCourses WHERE student_id = (%s)', (student_id,))
-    
     result = cursor.fetchall()
+    
     return result
 
 def validate(cur, data): #validate password in users table based on given username and password info
@@ -144,3 +144,5 @@ def formatCourseData(rawCoursesList):
     return courseJSON
 
 app.run(host="0.0.0.0", port=5000)
+
+db.commit() #makes database changes permanent
