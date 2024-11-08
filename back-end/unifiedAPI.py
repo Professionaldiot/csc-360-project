@@ -32,7 +32,7 @@ def searchCourses():
 #is passed in json form and the front-end can display the department
 #with knowing the department ID
 def getDepartment():
-    cursor.execute("SELECT department, department_id FROM departments")
+    cursor.execute("SELECT department_name, department_id FROM Departments")
     result = cursor.fetchall()
     departments_Data = [{"departmentID": row[0], "departmentName": row[1]} for row in result]
     return jsonify(departments_Data)
@@ -83,7 +83,12 @@ def searchCourseDatabase(cur, data): #searches the course database based on the 
     query = writeQuery(searchInfo)
     
     cur.execute(query)
+    
+    print(query)
+    
     rawCourses = cur.fetchall()
+    
+    print(rawCourses)
     
     coursesJSON = formatCourseData(rawCourses) #take raw course data and format it for return as JSON
     
@@ -95,14 +100,18 @@ def writeQuery(searchParameters):
     query = "SELECT * FROM Courses" #starting point to be added to
     clauses = []
     
-    if searchParameters["search"] != "": #add LIKE [search]
-        clauses.append(" (course_name LIKE '%" + str(searchParameters["search"]) + "%' OR course_code LIKE '%" + str(searchParameters["search"]) + "%')") 
-        
-    if searchParameters["block"] != "": #add where block is [block]
-        clauses.append(" block_num = '" + str(searchParameters["block"]) + "'")
+    search = searchParameters["search"]
+    block = searchParameters["block"]
+    department = searchParameters["department"]
     
-    if searchParameters["department"] != "": #add where department is [department]
-        clauses.append(" department_id = '" + str(searchParameters["department"]) + "'")
+    if search != "" and search != None: #add LIKE [search]
+        clauses.append(" (course_name LIKE '%" + str(search) + "%' OR course_code LIKE '%" + str(search) + "%')") 
+        
+    if block != "" and block != None: #add where block is [block]
+        clauses.append(" block_num = '" + str(block) + "'")
+    
+    if department != "" and department != None: #add where department is [department]
+        clauses.append(" department_id = '" + str(department) + "'")
     
     if len(clauses) > 0:
         query = query + " WHERE"
