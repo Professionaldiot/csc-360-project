@@ -42,8 +42,10 @@ def getRegisteredCourses():
     data = request.get_json()
     student_id = data.get('studentID')
     
-    cursor.execute('SELECT course_code FROM RegisteredCourses WHERE student_id = (%s)', (student_id,))
-    result = cursor.fetchall()
+    cursor.execute('SELECT course_code FROM CourseRegistration WHERE student_id = (%s)', (student_id,))
+    courseCodes = cursor.fetchall()
+    
+    result = processCourseCodes(courseCodes)
     
     return result
 
@@ -84,11 +86,7 @@ def searchCourseDatabase(cur, data): #searches the course database based on the 
     
     cur.execute(query)
     
-    print(query)
-    
     rawCourses = cur.fetchall()
-    
-    print(rawCourses)
     
     coursesJSON = formatCourseData(rawCourses) #take raw course data and format it for return as JSON
     
@@ -152,6 +150,31 @@ def formatCourseData(rawCoursesList):
     
     return courseJSON
 
+def processCourseCodes(courseCodes):
+
+    courseInfo = []
+
+    for courseCode in courseCodes:
+        # Prepare the query to fetch course data for each in the given list of course IDs
+        query = "SELECT * FROM Courses WHERE course_code IN (%s)" 
+
+        # Execute the query
+        cursor.execute(query, courseCode)
+
+        # Fetch results
+        result = cursor.fetchone()
+        
+        courseInfo.append(result)
+    
+    #format results as JSON
+    courses = formatCourseData(courseInfo)
+    
+    return courses
+        
+
 app.run(host="0.0.0.0", port=5000)
 
 db.commit() #makes database changes permanent
+
+cursor.close()
+db.close()
