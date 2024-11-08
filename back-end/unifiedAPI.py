@@ -32,7 +32,7 @@ def searchCourses():
 #is passed in json form and the front-end can display the department
 #with knowing the department ID
 def getDepartment():
-    cursor.execute("SELECT department_name, department_id FROM Departments")
+    cursor.execute("SELECT department_name, department_id FROM Departments;")
     result = cursor.fetchall()
     departments_Data = [{"departmentID": row[0], "departmentName": row[1]} for row in result]
     return jsonify(departments_Data)
@@ -168,7 +168,7 @@ def processCourseCodes(courseCodes):
 
     for courseCode in courseCodes:
         # Prepare the query to fetch course data for each in the given list of course IDs
-        query = "SELECT * FROM Courses WHERE course_code IN (%s)" 
+        query = "SELECT * FROM Courses WHERE course_code IN (%s);" 
         #there is almost definitely a way to do this for all of the ids at once, but i havent figured it out yet
 
         # Execute the query
