@@ -7,8 +7,8 @@ app = Flask(__name__)
 CORS(app) #allows for cross-origin resource sharing
 
 db = conn.connect(
-    host="localhost",
-    port="5000",
+    host="10.101.128.56",
+    port="6033",
     user="username",
     password="123",
     database="SelfService"
@@ -16,12 +16,12 @@ db = conn.connect(
 
 cursor = db.cursor()
 
-@app.route("/validate", methods=['POST'])
+@app.route("/validate", methods=['POST']) #takes username and password and validates login
 def validateLogin():
     data = request.get_json()
     return validate(cursor, data)
     
-@app.route("/search", methods=['POST'])
+@app.route("/search", methods=['POST']) #searches course database based on given search parameters
 def searchCourses():
     data = request.get_json()
     return searchCourseDatabase(cursor, data)
@@ -143,4 +143,4 @@ def formatCourseData(rawCoursesList):
     
     return courseJSON
 
-app.run(host="10.55.0.201", port=5000)
+app.run(host="0.0.0.0", port=5000)
