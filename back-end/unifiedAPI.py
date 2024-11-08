@@ -131,8 +131,6 @@ def searchCourseDatabase(cur, data): #searches the course database based on the 
     
     rawCourses = cur.fetchall()
     
-    print(rawCourses)
-    
     coursesJSON = formatCourseData(rawCourses) #take raw course data and format it for return as JSON
     
     print(coursesJSON)
