@@ -3,7 +3,7 @@
 async function fetchSchedule(studentID) {
     try {
 
-        const url = "10.101.128.56:5000/getRegisteredCourses"
+        const url = "http://10.101.128.56:5000/getRegisteredCourses"
         const req = await fetch(url, {
             method: "POST",
             body: JSON.stringify({
