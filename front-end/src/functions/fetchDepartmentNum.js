@@ -5,7 +5,7 @@ department names and their respective ID numbers
 */
 async function fetchDepartments() {
     try {
-        const url = "10.101.128.56:5000/getDepartments"
+        const url = "http://10.101.128.56:5000/getDepartments"
         const req = await Response.json()
         return req
     } catch (error) {
