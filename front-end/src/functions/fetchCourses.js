@@ -6,7 +6,7 @@ returns a list of course objects.
 async function fetchCourses(search, blockNum, department) {
     try {
 
-        const url = "10.101.128.56:5000/search"
+        const url = "http://10.101.128.56:5000/search"
         const req = await fetch(url, {
             method: "POST",
             body: JSON.stringify({
