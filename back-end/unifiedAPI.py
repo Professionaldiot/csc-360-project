@@ -42,7 +42,7 @@ def getRegisteredCourses():
     data = request.get_json()
     student_id = data.get('studentID')
     
-    cursor.execute('SELECT course_code FROM CourseRegistration WHERE student_id = (%s)', (student_id,))
+    cursor.execute('SELECT course_code FROM CourseRegistration WHERE student_id = (%s);', (student_id,))
     courseCodes = cursor.fetchall()
     
     result = processCourseCodes(courseCodes)
@@ -54,7 +54,7 @@ def getFacultyCourses():
     data = request.get_json()
     faculty_id = data.get('facultyID')
     
-    cursor.execute('SELECT course_code FROM Courses WHERE faculty_id = (%s)', (faculty_id,))
+    cursor.execute('SELECT course_code FROM Courses WHERE faculty_id = (%s);', (faculty_id,))
     courseCodes = cursor.fetchall()
     
     result = processCourseCodes(courseCodes)
