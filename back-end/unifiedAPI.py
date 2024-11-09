@@ -16,15 +16,18 @@ db = conn.connect(
 
 cursor = db.cursor()
 
+
 @app.route("/validate", methods=['POST']) #takes username and password and validates login
 def validateLogin():
     data = request.get_json()
     return validate(cursor, data)
+  
     
 @app.route("/search", methods=['POST']) #searches course database based on given search parameters
 def searchCourses():
     data = request.get_json()
     return searchCourseDatabase(cursor, data)
+
 
 @app.route("/getDepartment", methods =['POST','GET']) #Gets the request for department filter data
 #When the department filter is selected, it goes into the database
@@ -37,6 +40,7 @@ def getDepartment():
     departments_Data = [{"departmentID": row[0], "departmentName": row[1]} for row in result]
     return jsonify(departments_Data)
 
+
 @app.route("/getRegisteredCourses", methods=['POST']) #takes a student's user id, returns list of course codes
 def getRegisteredCourses():
     data = request.get_json()
@@ -46,8 +50,10 @@ def getRegisteredCourses():
     courseCodes = cursor.fetchall()
     
     result = processCourseCodes(courseCodes)
+    print(result)
     
     return result
+
 
 @app.route("/getFacultyCourses", methods=['POST']) #takes a faculty's user id, returns list of course codes
 def getFacultyCourses():
@@ -60,6 +66,29 @@ def getFacultyCourses():
     result = processCourseCodes(courseCodes)
     
     return result
+
+
+@app.route("/register", methods = ['POST']) #takes a student id and course code, calls function to check  
+#if the course is full, if there is capacity registers student for that course, if full return message saying it's full
+def register():
+    #expects "studentID" and "courseCode"
+    data = request.get_json()
+    courseCode = data.get("courseCode")
+    studentID = data.get("studentID")
+    
+    return registerStudent(studentID, courseCode)
+
+
+@app.route("/unregister", methods = ['POST']) #takes a student id and course code, calls function to check
+#if student is registered for that course, if so they are removed and current course enrollment is decreased
+def unregister():
+    #expects "studentID" and "courseCode"
+    data = request.get_json()
+    courseCode = data.get("courseCode")
+    studentID = data.get("studentID")
+    
+    return unregisterStudent(studentID, courseCode)
+
 
 def validate(cur, data): #validate password in users table based on given username and password info
 
@@ -82,6 +111,7 @@ def validate(cur, data): #validate password in users table based on given userna
         
     return {"success": False}
 
+
 def searchCourseDatabase(cur, data): #searches the course database based on the provided search parameters (data)
     
     block = data.get("block")
@@ -103,6 +133,7 @@ def searchCourseDatabase(cur, data): #searches the course database based on the 
     coursesJSON = formatCourseData(rawCourses) #take raw course data and format it for return as JSON
     
     return coursesJSON
+
 
 #takes a dictionary of search parameters, returns an SQL query to execute the corresponding search
 def writeQuery(searchParameters):
@@ -138,6 +169,7 @@ def writeQuery(searchParameters):
     
     return query
 
+
 #takes raw course data from SELECT query, returns it formatted as a JSON containing all course properties from the database
 def formatCourseData(rawCoursesList):
     
@@ -162,6 +194,7 @@ def formatCourseData(rawCoursesList):
     
     return courseJSON
 
+
 def processCourseCodes(courseCodes):
 
     courseInfo = []
@@ -184,6 +217,61 @@ def processCourseCodes(courseCodes):
     
     return courses 
 
+
+def registerStudent(studentID, courseCode): #takes a student id number and a course code, checks if the class is full.
+    #if the class is full, return a message informing the user. if the class has space, increment current capacity for that class,
+    #add an entry to the courseRegistration table with that student's id and course code
+
+    if (hasCapacity(courseCode)): #if course has capacity
+        
+        #increment current capacity
+        cursor.execute("UPDATE Courses SET current_capacity = current_capacity + 1 WHERE course_code = (%s);", (courseCode,))
+        
+        #add link between student and course to registration table
+        cursor.execute("INSERT INTO CourseRegistration (student_id, course_code) VALUES (%s, %s);", (studentID, courseCode))
+        
+        db.commit()
+        
+        successMessage = ("Student #%s successfully registered for course %s" % (studentID, courseCode))
+        return {"message": successMessage}
+        
+    #if course is full
+    failedMessage = ("Sorry, course %s is currently full." % (courseCode))
+    return {"message": failedMessage}
+    
+    
+def hasCapacity(courseCode): #takes a course code, returns False if course is full, True if it has space
+    cursor.execute("SELECT current_capacity, max_capacity FROM Courses WHERE course_code = (%s);", (courseCode,))
+    caps = cursor.fetchone()
+    
+    if (caps[0] >= caps[1]): #if current enrollment >= max capacity
+        return False
+    
+    return True #if course has capacity
+
+
+def unregisterStudent(studentID, courseCode): #takes a course code and student id, checks if student is enrolled in that course
+    #if not, returns a message informing the user. if the student is enrolled, removes them from the course, decreases the current
+    #course enrollment by 1
+    
+    #check for any registration entries between this student and this course
+    cursor.execute("SELECT entry_id FROM CourseRegistration WHERE student_id = (%s) AND course_code = (%s);", (studentID, courseCode))
+    registrationID = cursor.fetchone()
+    
+    #if query returns nothing
+    if registrationID is None:
+        failedMessage = ("Sorry, student #%s is not currently registered for course %s" % (studentID, courseCode))
+        return {"message": failedMessage}
+    
+    #delete registration link
+    cursor.execute("DELETE FROM CourseRegistration WHERE entry_id = (%s);", registrationID)
+    
+    #decrease current_capacity
+    cursor.execute("UPDATE Courses SET current_capacity = current_capacity - 1 WHERE course_code = (%s);", (courseCode,))
+    
+    successMessage = ("Student #%s successfully removed from course %s" % (studentID, courseCode))
+    return {"message": successMessage}
+        
 
 app.run(host="0.0.0.0", port=5000)
 
