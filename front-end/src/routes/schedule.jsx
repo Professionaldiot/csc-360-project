@@ -2,7 +2,7 @@ import './App.css';
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
-import { createTheme, FormHelperText } from '@mui/material';
+import { circularProgressClasses, createTheme, FormHelperText } from '@mui/material';
 import FormControl, { useFormControl } from '@mui/material/FormControl';
 import Button from '@mui/material/Button';
 import { Card, CardActions, CardContent, Typography } from '@mui/material';
@@ -32,21 +32,41 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 export default function Schedule() {
+    let classes = [];
+    classes.push({courseCode: 'BIO101', courseName: 'Introduction to Biology',blockNum:'B1',courseYear:'2024'});
+    classes.push({courseCode: 'BIO102', courseName: 'Ecology',blockNum:'B2',courseYear:'2024'});
+    classes.push({courseCode: 'BIO201', courseName: 'Genetics',blockNum:'B3',courseYear:'2025'});
+    classes.push({courseCode: 'BIO202', courseName: 'Mirobiology',blockNum:'B4',courseYear:'2025'});
+    console.log(classes);
     let userT = "student";
     let userID = "1"
-    const studentCourses = fetchSchedule(userID);
+    const [studentCourses, setStudentCourses] = React.useState(null);
+    React.useEffect(() => {setStudentCourses(fetchSchedule(userID))},[]);
     console.log(studentCourses);
     console.log(userID);
     if (userT === "student") {
         // Show schedule page
+
         return (
             <>
                 <div className="loginBack">
                     <Box
                         sx={{ justifyContent: 'space-around', alignItems: 'end',
-                        position: "absolute", left: '10%', top: '13%', overflow: 'auto' }}>
+                        position: "absolute", alignContent:'center',top:'10%', overflow: 'auto' }}>
                             <Stack spacing={2} sx={{ float: 'left', marginLeft: '48px', width: '200px', textAlign: 'left' }}>
-                                <Item sx={{ height: '28px' }}>BIO-180: BLOCK-2</Item>
+                                <Item sx={{ height: '28px' }}>{classes[0].courseCode + ": " + classes[0].blockNum}</Item>
+                            </Stack>
+
+                            <Stack spacing={2} sx={{ float: 'left', marginLeft: '48px', width: '200px', textAlign: 'left' }}>
+                                <Item sx={{ height: '28px' }}>{classes[1].courseCode + ": " + classes[2].blockNum}</Item>
+                            </Stack>
+
+                            <Stack spacing={2} sx={{ float: 'left', marginLeft: '48px', width: '200px', textAlign: 'left' }}>
+                                <Item sx={{ height: '28px' }}>{classes[2].courseCode + ": " + classes[3].blockNum}</Item>
+                            </Stack>
+
+                            <Stack spacing={2} sx={{ float: 'left', marginLeft: '48px', width: '200px', textAlign: 'left' }}>
+                                <Item sx={{ height: '28px' }}>{classes[3].courseCode + ": " + classes[3].blockNum}</Item>
                             </Stack>
                     </Box>
                 </div>
