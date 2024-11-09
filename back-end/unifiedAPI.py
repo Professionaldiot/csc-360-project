@@ -230,7 +230,7 @@ def registerStudent(studentID, courseCode): #takes a student id number and a cou
         #add link between student and course to registration table
         cursor.execute("INSERT INTO CourseRegistration (student_id, course_code) VALUES (%s, %s);", (studentID, courseCode))
         
-        db.commit()
+        db.commit() #makes database changes permanent
         
         successMessage = ("Student #%s successfully registered for course %s" % (studentID, courseCode))
         return {"message": successMessage}
@@ -268,6 +268,8 @@ def unregisterStudent(studentID, courseCode): #takes a course code and student i
     
     #decrease current_capacity
     cursor.execute("UPDATE Courses SET current_capacity = current_capacity - 1 WHERE course_code = (%s);", (courseCode,))
+    
+    db.commit() #makes database changes permanent
     
     successMessage = ("Student #%s successfully removed from course %s" % (studentID, courseCode))
     return {"message": successMessage}
