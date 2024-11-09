@@ -22,6 +22,7 @@ async function fetchLogin(user, pass) {
             }
         })
         const res = await req.json()
+        console.log(res);
         // note: this currently returns a boolean, probably changed later
         return res // change to just res later once user role return is implemented
     } catch (error) {

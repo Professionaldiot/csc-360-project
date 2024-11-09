@@ -7,6 +7,7 @@ async function fetchDepartments() {
     try {
         const url = "http://10.101.128.56:5000/getDepartments"
         const req = await Response.json()
+        console.log(req)
         return req
     } catch (error) {
         console.error('Error:', error);
