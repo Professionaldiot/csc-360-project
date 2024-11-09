@@ -1,6 +1,6 @@
 import './App.css';
 import * as React from 'react';
-import { useEffect, useState, createContext } from 'react';
+import { useEffect } from 'react';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import { createTheme, FormHelperText } from '@mui/material';
@@ -13,19 +13,10 @@ import Avatar from '@mui/material/Avatar';
 import { Outlet, Link } from 'react-router-dom'
 import Menu from '@mui/material/Menu';
 
-
-export const UserContext = createContext(null);
-
 export default function Root() {
-    const [isLogged, setIsLogged] = useState(false);
-    const [userData, setUserData] = useState([]);
 
     return (
         <>
-            <UserContext.Provider value={{
-                isLogged: isLogged, setIsLogged: setIsLogged,
-                userData: userData, setUserData: setUserData,
-            }} >
                 {/*Header business here*/}
                 <div className='headContainer'>
                     <div className='selfService-Header'>
@@ -45,7 +36,6 @@ export default function Root() {
                         <Outlet />
                     </div>
                 </div>
-            </UserContext.Provider>
         </>
     )
 }
