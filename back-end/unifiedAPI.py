@@ -4,7 +4,7 @@ import json
 from flask_cors import CORS
 
 app = Flask(__name__)
-CORS(app) #allows for cross-origin resource sharing
+CORS(app, resources={r"/*": {"origins": ["http://10.101.128.56:3000"]}}) #allows for cross-origin resource sharing
 
 db = conn.connect(
     host="10.101.128.56",
