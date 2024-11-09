@@ -55,17 +55,8 @@ export default function Schedule() {
                         position: "absolute", alignContent:'center',top:'10%', overflow: 'auto' }}>
                             <Stack spacing={2} sx={{ float: 'left', marginLeft: '48px', width: '200px', textAlign: 'left' }}>
                                 <Item sx={{ height: '28px' }}>{classes[0].courseCode + ": " + classes[0].blockNum}</Item>
-                            </Stack>
-
-                            <Stack spacing={2} sx={{ float: 'left', marginLeft: '48px', width: '200px', textAlign: 'left' }}>
-                                <Item sx={{ height: '28px' }}>{classes[1].courseCode + ": " + classes[2].blockNum}</Item>
-                            </Stack>
-
-                            <Stack spacing={2} sx={{ float: 'left', marginLeft: '48px', width: '200px', textAlign: 'left' }}>
-                                <Item sx={{ height: '28px' }}>{classes[2].courseCode + ": " + classes[3].blockNum}</Item>
-                            </Stack>
-
-                            <Stack spacing={2} sx={{ float: 'left', marginLeft: '48px', width: '200px', textAlign: 'left' }}>
+                                <Item sx={{ height: '28px' }}>{classes[1].courseCode + ": " + classes[1].blockNum}</Item>
+                                <Item sx={{ height: '28px' }}>{classes[2].courseCode + ": " + classes[2].blockNum}</Item>
                                 <Item sx={{ height: '28px' }}>{classes[3].courseCode + ": " + classes[3].blockNum}</Item>
                             </Stack>
                     </Box>

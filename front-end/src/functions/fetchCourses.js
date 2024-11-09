@@ -19,7 +19,7 @@ async function fetchCourses(search, blockNum, department) {
             }
         })
         const res = await req.json()
-
+        console.log(res);
         return res
     } catch (error) {
         console.error('Error:', error);
