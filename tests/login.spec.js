@@ -148,9 +148,11 @@ describe('Text of login items is correct', function() {
 
 
 //Tests that all valid test users can login
-describe('Valid usernames and passwords allow log in', function() {
+describe('Valid usernames and passwords or guest button allow access to course page', function() {
   this.timeout(30000);
   let driver;
+
+  //Inputs username and password for each test and checks if webpage changed
   async function testLogin(username, password) {
     let url;
     await driver.findElement(By.id("login-username")).sendKeys(username);
@@ -165,8 +167,6 @@ describe('Valid usernames and passwords allow log in', function() {
     driver = await new Builder().forBrowser('chrome').build();
     await driver.get("http://10.101.128.56:3000//");
   })
-
-//Inputs username and password for each test and checks if webpage changed
   
   afterEach(async function() {
     await driver.quit();
@@ -250,5 +250,78 @@ describe('Valid usernames and passwords allow log in', function() {
 
   it('Test valid user 20', async function() {
     assert(testLogin("jgreen", "MyAcc3ss!") == "http://10.101.128.56:3000/courses");
+  })
+
+  it('Test guest button', async function() {
+    await driver.findElement(By.css(".MuiButton-outlined")).click();
+    assert(window.location.href == "http://10.101.128.56:3000/courses");
+  })
+})
+
+
+
+
+//Tests that invalid users cannot login
+describe('Invalid usernames and passwords do not allow log in', function() {
+  this.timeout(30000);
+  let driver;
+
+  //Inputs username and password for each test and checks if webpage changed
+  async function testLogin(username, password) {
+    let url;
+    await driver.findElement(By.id("login-username")).sendKeys(username);
+    await driver.findElement(By.id("login-password")).sendKeys(password);
+    await driver.findElement(By.css(".MuiButton-contained")).click();
+    driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+    url = window.location.href;
+    return url.toString();
+  }
+
+//Creates driver and sends it to login
+  beforeEach(async function() {
+    driver = await new Builder().forBrowser('chrome').build();
+    await driver.get("http://10.101.128.56:3000//");
+  })
+  
+  afterEach(async function() {
+    await driver.quit();
+  })
+
+  it('Test mismatched information 1', async function() {
+    assert(testLogin("jgreen", "SafeKey#3") == "http://10.101.128.56:3000");
+  })
+
+  it('Test mismatched information 2', async function() {
+    assert(testLogin("jsmith", "MyAcc3ss!") == "http://10.101.128.56:3000");
+  })
+
+  it('Test mismatched information 3', async function() {
+    assert(testLogin("nobody", "notapa$$word") == "http://10.101.128.56:3000");
+  })
+
+  it('Test mismatched information 4', async function() {
+    assert(testLogin("john45", "MyAcc3ss") == "http://10.101.128.56:3000");
+  })
+
+  it('Test empty string 1', async function() {
+    assert(testLogin("", "") == "http://10.101.128.56:3000");
+  })
+
+  it('Test empty string 2', async function() {
+    assert(testLogin("jsmith", "") == "http://10.101.128.56:3000");
+  })
+
+  it('Test empty string 3', async function() {
+    assert(testLogin("", "MyAcc3ss!") == "http://10.101.128.56:3000");
+  })
+
+  it('Test long string 1', async function() {
+    assert(testLogin("thisisareallylongstringforausernameithinkitsoverthirtttwocharactersaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "MyAcc3ss!") == "http://10.101.128.56:3000");
+  })
+
+  it('Test long string 2', async function() {
+    assert(testLogin("jsmith",
+      "thisisareallylongstringforapasswordithinkitsoverthirtttwocharacters") == "http://10.101.128.56:3000");
   })
 })
