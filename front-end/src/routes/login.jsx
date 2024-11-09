@@ -8,6 +8,7 @@ import { Card, CardActions, CardContent, Typography } from '@mui/material';
 import FilledInput from '@mui/material/FilledInput';
 import InputLabel from '@mui/material/InputLabel';
 import fetchLogin from '../functions/fetchLogin';
+import { useGlobalState } from '../functions/globalState';
 
 let loggedIn = false;
 
@@ -54,6 +55,7 @@ export default function Login() {
   it to "student" just in case.
   */
   let userLevel = "student"; 
+  const { userData, setUserData, isLogged, setIsLogged } = useGlobalState();
 
   const [values, setValues] = React.useState({
     /*
@@ -90,9 +92,9 @@ export default function Login() {
     const willLogin = await fetchLogin(values.username, values.password);
     console.log(values.username, " ", values.password);
     if (willLogin.success) {
-      userLevel=willLogin.user_type;
+      setUserData(willLogin.user_type);
       console.log(userLevel);
-      loggedIn=true
+      setIsLogged(true);
       window.location.href = "/courses";
     }
     else {
