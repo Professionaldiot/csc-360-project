@@ -17,16 +17,19 @@ db = conn.connect(
 cursor = db.cursor()
 
 
+
 @app.route("/validate", methods=['POST']) #takes username and password and validates login
 def validateLogin():
     data = request.get_json()
     return validate(cursor, data)
+  
   
     
 @app.route("/search", methods=['POST']) #searches course database based on given search parameters
 def searchCourses():
     data = request.get_json()
     return searchCourseDatabase(cursor, data)
+
 
 
 @app.route("/getDepartment", methods =['POST','GET']) #Gets the request for department filter data
@@ -41,6 +44,7 @@ def getDepartment():
     return jsonify(departments_Data)
 
 
+
 @app.route("/getRegisteredCourses", methods=['POST']) #takes a student's user id, returns list of course codes
 def getRegisteredCourses():
     data = request.get_json()
@@ -51,8 +55,10 @@ def getRegisteredCourses():
     
     result = processCourseCodes(courseCodes)
     print(result)
+    print(result)
     
     return result
+
 
 
 @app.route("/getFacultyCourses", methods=['POST']) #takes a faculty's user id, returns list of course codes
@@ -66,6 +72,29 @@ def getFacultyCourses():
     result = processCourseCodes(courseCodes)
     
     return result
+
+
+@app.route("/register", methods = ['POST']) #takes a student id and course code, calls function to check  
+#if the course is full, if there is capacity registers student for that course, if full return message saying it's full
+def register():
+    #expects "studentID" and "courseCode"
+    data = request.get_json()
+    courseCode = data.get("courseCode")
+    studentID = data.get("studentID")
+    
+    return registerStudent(studentID, courseCode)
+
+
+@app.route("/unregister", methods = ['POST']) #takes a student id and course code, calls function to check
+#if student is registered for that course, if so they are removed and current course enrollment is decreased
+def unregister():
+    #expects "studentID" and "courseCode"
+    data = request.get_json()
+    courseCode = data.get("courseCode")
+    studentID = data.get("studentID")
+    
+    return unregisterStudent(studentID, courseCode)
+
 
 
 @app.route("/register", methods = ['POST']) #takes a student id and course code, calls function to check  
@@ -112,6 +141,7 @@ def validate(cur, data): #validate password in users table based on given userna
     return {"success": False}
 
 
+
 def searchCourseDatabase(cur, data): #searches the course database based on the provided search parameters (data)
     
     block = data.get("block")
@@ -135,6 +165,7 @@ def searchCourseDatabase(cur, data): #searches the course database based on the 
     print(coursesJSON)
     
     return coursesJSON
+
 
 
 #takes a dictionary of search parameters, returns an SQL query to execute the corresponding search
@@ -174,6 +205,7 @@ def writeQuery(searchParameters):
     return query
 
 
+
 #takes raw course data from SELECT query, returns it formatted as a JSON containing all course properties from the database
 def formatCourseData(rawCoursesList):
     
@@ -197,6 +229,7 @@ def formatCourseData(rawCoursesList):
     courseJSON = json.dumps(formattedCourses)
     
     return courseJSON
+
 
 
 def processCourseCodes(courseCodes):
@@ -234,7 +267,7 @@ def registerStudent(studentID, courseCode): #takes a student id number and a cou
         #add link between student and course to registration table
         cursor.execute("INSERT INTO CourseRegistration (student_id, course_code) VALUES (%s, %s);", (studentID, courseCode))
         
-        db.commit() #makes database changes permanent
+        db.commit()
         
         successMessage = ("Student #%s successfully registered for course %s" % (studentID, courseCode))
         return {"message": successMessage}
@@ -272,8 +305,6 @@ def unregisterStudent(studentID, courseCode): #takes a course code and student i
     
     #decrease current_capacity
     cursor.execute("UPDATE Courses SET current_capacity = current_capacity - 1 WHERE course_code = (%s);", (courseCode,))
-    
-    db.commit() #makes database changes permanent
     
     successMessage = ("Student #%s successfully removed from course %s" % (studentID, courseCode))
     return {"message": successMessage}
