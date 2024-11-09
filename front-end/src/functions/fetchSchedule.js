@@ -14,7 +14,7 @@ async function fetchSchedule(studentID) {
             }
         })
         const res = await req.json()
-
+        console.log(res);
         return res
     } catch (error) {
         console.error('Error:', error);
