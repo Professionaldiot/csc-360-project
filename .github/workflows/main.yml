@@ -5,7 +5,7 @@ on:
 
 jobs:
   build:
-    runs-on: cool-runner
+    runs-on: [Linux, x64, Self-hosted]
 
     steps:
       - name: Checkout code
