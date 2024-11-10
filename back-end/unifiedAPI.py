@@ -132,6 +132,8 @@ def searchCourseDatabase(cur, data): #searches the course database based on the 
     
     coursesJSON = formatCourseData(rawCourses) #take raw course data and format it for return as JSON
     
+    print(coursesJSON)
+    
     return coursesJSON
 
 
@@ -146,13 +148,13 @@ def writeQuery(searchParameters):
     department = searchParameters["department"]
     
     if search != "" and search != None: #add LIKE [search]
-        clauses.append(" (course_name LIKE '%" + str(search) + "%' OR course_code LIKE '%" + str(search) + "%')") 
+        clauses.append(f" (course_name LIKE '%{search}%' OR course_code LIKE '%{search}%')") 
         
     if block != "" and block != None: #add where block is [block]
-        clauses.append(" block_num = '" + str(block) + "'")
+        clauses.append(" block_num = '%s'" % (block,))
     
     if department != "" and department != None: #add where department is [department]
-        clauses.append(" department_id = '" + str(department) + "'")
+        clauses.append(" department_id = '%s'" % (department,))
     
     if len(clauses) > 0:
         query = query + " WHERE"
@@ -166,6 +168,8 @@ def writeQuery(searchParameters):
             count += 1 #increment count to show that AND is needed
         
     query = query + ";"
+    
+    print(query)
     
     return query
 
