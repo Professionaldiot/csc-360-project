@@ -5,6 +5,7 @@ mysql server.  takes in username and pass, returns
 boolean (and eventually a user role if true)
 */
 async function fetchLogin(user, pass) {
+
     if (user.length>32 || pass.length>32) {
         return false
     }
@@ -22,6 +23,7 @@ async function fetchLogin(user, pass) {
             }
         })
         const res = await req.json()
+        console.log(res)
         // note: this currently returns a boolean, probably changed later
         return res // change to just res later once user role return is implemented
     } catch (error) {

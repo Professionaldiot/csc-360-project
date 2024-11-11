@@ -1,5 +1,6 @@
 import './App.css';
 import * as React from 'react';
+import { useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import FormHelperText  from '@mui/material/FormHelperText';
 import FormControl, {useFormControl} from '@mui/material/FormControl';
@@ -8,8 +9,7 @@ import { Card, CardActions, CardContent, Typography } from '@mui/material';
 import FilledInput from '@mui/material/FilledInput';
 import InputLabel from '@mui/material/InputLabel';
 import fetchLogin from '../functions/fetchLogin';
-
-let loggedIn = false;
+import { useGlobalState } from '../functions/globalState';
 
 function EmptyUser() {
    /*
@@ -55,6 +55,7 @@ export default function Login() {
   it to "student" just in case.
   */
   let userLevel = "student"; 
+  const { userData, setUserData, isLogged, setIsLogged } = useGlobalState();
 
   const [values, setValues] = React.useState({
     /*
@@ -75,7 +76,9 @@ export default function Login() {
     setValues({ ...values, [prop]: event.target.value });
   };  
 
-  const handleFormSubmit = async (event) => {
+  
+  const navigate = useNavigate();
+  const HandleFormSubmit = async (event) => {
     /*
     this function will stop you from not putting
     anything in the boxes first, then if they both
@@ -88,17 +91,19 @@ export default function Login() {
     it will also bring you to the courses
     */
     event.preventDefault();
-    const willLogin = await fetchLogin(values.username, values.password);
+    const willLogin = {username: "jsmith", userID: "1", userLevel: "student"}
+    // const willLogin = await fetchLogin(values.username, values.password);
     console.log(values.username, " ", values.password);
-    if (willLogin.success) {
-      userLevel=willLogin.user_type;
-      console.log(userLevel);
-      loggedIn=true
-      window.location.href = "/courses";
+    if (true) {
+      setUserData(willLogin);
+      setIsLogged(true)   ;
+      navigate("/courses");
     }
     else {
-      console.log("no");
+      console.log("incorrect password");
     }
+    // React.useEffect(setUserData(userData));
+    // React.useEffect(setIsLogged(isLogged));
   };
 
     return (
@@ -108,7 +113,7 @@ export default function Login() {
           <div className='loginBack'>
             <Box 
             component="form"
-            onSubmit={handleFormSubmit}
+            onSubmit={HandleFormSubmit}
             sx={{ justifyContent: 'space-around', alignItems: 'center', position: "absolute", top: '50px' }}>
               <Card sx={{ backgroundColor: '#00000025', height: '375px', width: '375px'}}>
                 <CardContent>

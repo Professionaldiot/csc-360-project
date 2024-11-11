@@ -1,18 +1,13 @@
-/*
-Fetch function for searching courses.
-Takes a search string, block #, and department as inputs,
-returns a list of course objects.
-*/
-async function fetchCourses(search, blockNum, department) {
+
+
+async function fetchSchedule(studentID) {
     try {
 
-        const url = "http://10.101.128.56:5000/search"
+        const url = "http://10.101.128.56:5000/getRegisteredCourses"
         const req = await fetch(url, {
             method: "POST",
             body: JSON.stringify({
-                "search": search,
-                "block": blockNum,
-                "department": department
+                "studentID": studentID,
             }),
             headers: {
                 "Content-Type": "application/json"
@@ -27,4 +22,4 @@ async function fetchCourses(search, blockNum, department) {
     }
 }
 
-export default fetchCourses;
+export default fetchSchedule;
