@@ -10,8 +10,6 @@ import InputLabel from '@mui/material/InputLabel';
 import fetchLogin from '../functions/fetchLogin';
 import { useGlobalState } from '../functions/globalState';
 
-let loggedIn = false;
-
 function EmptyUser() {
    /*
    this function is using materialUI's value.filled
@@ -92,13 +90,13 @@ export default function Login() {
     const willLogin = await fetchLogin(values.username, values.password);
     console.log(values.username, " ", values.password);
     if (willLogin.success) {
-      setUserData(willLogin.user_type);
+      setUserData(willLogin);
       console.log(userLevel);
       setIsLogged(true);
       window.location.href = "/courses";
     }
     else {
-      console.log("no");
+      console.log("incorrect password");
     }
   };
 
