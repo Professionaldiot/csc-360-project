@@ -1,27 +1,34 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 import mysql.connector as conn
 import json
-from flask_cors import CORS
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": ["http://10.101.128.56:3000"]}}) #allows for cross-origin resource sharing
 CORS(app, resources={r"/*": {"origins": ["http://10.101.128.56:3000"]}}) #allows for cross-origin resource sharing
 
-db = conn.connect(
-    host="10.101.128.56",
-    port="6033",
-    user="username",
-    password="123",
-    database="SelfService"
-)
+def getCursor():
+    db = conn.connect(
+        host="10.101.128.56",
+        port="6033",
+        user="username",
+        password="123",
+        database="SelfService")
 
-cursor = db.cursor()
+    cursor = db.cursor()
+    return db, cursor
+
+def closeConnection(db, cursor):
+    db.commit()
+    cursor.close()
+    db.close()
+
 
 
 @app.route("/validate", methods=['POST']) #takes username and password and validates login
 def validateLogin():
     data = request.get_json()
-    return validate(cursor, data)
+    return validate(data)
   
     
 @app.route("/search", methods=['POST']) #searches course database based on given search parameters
@@ -48,13 +55,15 @@ def getDepartment():
 def getRegisteredCourses():
     data = request.get_json()
     student_id = data.get('studentID')
+
+    db, cursor = getCursor()
     
     cursor.execute('SELECT course_code FROM CourseRegistration WHERE student_id = (%s);', (student_id,))
     courseCodes = cursor.fetchall()
     
     result = processCourseCodes(courseCodes)
     print(result)
-    
+    closeConnection(db, cursor)
     return result
 
 
@@ -93,26 +102,30 @@ def unregister():
     return unregisterStudent(studentID, courseCode)
 
 
-def validate(cur, data): #validate password in users table based on given username and password info
+def validate(data):  # validate password in users table based on given username and password info
 
     username = data.get("username")
     password = data.get("password")
-
+    db, cur = getCursor()
     cur.execute("SELECT passcode, user_type, user_id FROM Users WHERE user_name = (%s);", (username,))
-    result = cursor.fetchone()
-    
+    result = cur.fetchone()
+    returnData = {}
     try:
         if password == result[0]:
-            return {
-                "success": True,
-                "userType": result[1],
-                "userID": result[2]
-                }
-        
+            returnData["success"] = True
+            returnData["userType"] = result[1]
+            returnData["userID"] = result[2]
+        else:
+            returnData["success"] = False
     except:
-        return {"success": False}
-        
-    return {"success": False}
+        # closeConnection(db,cur)
+        returnData["success"] = False
+    finally:
+        closeConnection(db, cur)
+        return returnData
+
+    # closeConnection(db,cur)
+    # return {"success": False}
 
 
 def searchCourseDatabase(cur, data): #searches the course database based on the provided search parameters (data)
@@ -205,7 +218,7 @@ def formatCourseData(rawCoursesList):
 def processCourseCodes(courseCodes):
 
     courseInfo = []
-
+    db, cursor = getCursor()
     for courseCode in courseCodes:
         # Prepare the query to fetch course data for each in the given list of course IDs
         query = "SELECT * FROM Courses WHERE course_code IN (%s);" 
@@ -221,7 +234,8 @@ def processCourseCodes(courseCodes):
     
     #format results as JSON
     courses = formatCourseData(courseInfo)
-    
+
+    closeConnection(db, cursor)
     return courses 
 
 
