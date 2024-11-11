@@ -303,7 +303,7 @@ def hasBlock( studentID, courseCode): #This will check to see if a student has a
     cursor.execute("SELECT course_code FROM CourseRegistration WHERE student_ID = (%s);", (studentID,))
     courses = cursor.fetchall() #this gets all the courses a student is in
 
-    cursor.execute("SELECT block_num, course_year FROM Courses WHERE course_code =(%s);",(courseCode))
+    cursor.execute("SELECT block_num, course_year FROM Courses WHERE course_code = (%s);",(courseCode,))
     blockYear = cursor.fetchone() #This gets the coure they are trying to register's block/year
 
     closeConnection(db, cursor)
