@@ -18,7 +18,7 @@ import { styled } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
 import { positions } from '@mui/system';
 import fetchSchedule from "../functions/fetchSchedule.js";
-import {UserContext} from "./root.jsx";
+import { useGlobalState } from '../functions/globalState.js';
 
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: '#fff',
@@ -32,6 +32,9 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 export default function Schedule() {
+    
+    const { userData, setUserData, isLogged, setIsLogged } = useGlobalState();
+    console.log(userData);
     let classes = [];
     classes.push({courseCode: 'BIO101', courseName: 'Introduction to Biology',blockNum:'B1',courseYear:'2024'});
     classes.push({courseCode: 'BIO102', courseName: 'Ecology',blockNum:'B2',courseYear:'2024'});

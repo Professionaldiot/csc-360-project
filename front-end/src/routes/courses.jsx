@@ -17,6 +17,7 @@ import Stack from '@mui/material/Stack';
 import { styled } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
 import { positions } from '@mui/system';
+import { useGlobalState } from '../functions/globalState';
 
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: '#fff',
@@ -43,6 +44,9 @@ export default function Courses() {
         setBlock(event.target.value);
     };
 
+    
+    const { userData, setUserData, isLogged, setIsLogged } = useGlobalState();
+    console.log(userData + " " + isLogged);
     return (
         <>
             <div className='loginBack'>

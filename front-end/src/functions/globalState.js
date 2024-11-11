@@ -10,7 +10,7 @@ const GlobalStateContext = createContext();
 export const GlobalStateProvider = ({ children }) => {
     const [userData, setUserData] = useState([]);
     const [isLogged, setIsLogged] = useState(false);
-
+    console.log(userData);
     return (
         <GlobalStateContext.Provider value={{
             userData, setUserData,
