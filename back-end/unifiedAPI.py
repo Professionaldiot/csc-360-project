@@ -6,6 +6,7 @@ import json
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": ["http://10.101.128.56:3000"]}}) #allows for cross-origin resource sharing
 
+
 def getCursor():
     db = conn.connect(
         host="10.101.128.56",
@@ -17,11 +18,11 @@ def getCursor():
     cursor = db.cursor()
     return db, cursor
 
+
 def closeConnection(db, cursor):
     db.commit()
     cursor.close()
     db.close()
-
 
 
 @app.route("/validate", methods=['POST']) #takes username and password and validates login
@@ -36,7 +37,6 @@ def searchCourses():
     return searchCourseDatabase(data)
 
 
-
 @app.route("/getDepartment", methods =['POST','GET']) #Gets the request for department filter data
 #When the department filter is selected, it goes into the database
 #and gets the department ID and department name, so the data
@@ -44,9 +44,12 @@ def searchCourses():
 #with knowing the department ID
 def getDepartment():
     db, cursor = getCursor()
+    
     cursor.execute("SELECT department_name, department_id FROM Departments;")
     result = cursor.fetchall()
+    
     departments_Data = [{"departmentID": row[0], "departmentName": row[1]} for row in result]
+    
     closeConnection(db, cursor)
     return jsonify(departments_Data)
 
@@ -64,6 +67,7 @@ def getRegisteredCourses():
     
     result = processCourseCodes(courseCodes)
     print(result)
+    
     closeConnection(db, cursor)
     return result
 
@@ -82,7 +86,6 @@ def getFacultyCourses():
     result = processCourseCodes(courseCodes)
     
     closeConnection(db, cursor)
-    
     return result
 
 
@@ -109,13 +112,16 @@ def unregister():
 
 
 def validate(data):  # validate password in users table based on given username and password info
-
     username = data.get("username")
     password = data.get("password")
-    db, cur = getCursor()
-    cur.execute("SELECT passcode, user_type, user_id FROM Users WHERE user_name = (%s);", (username,))
-    result = cur.fetchone()
+
+    db, cursor = getCursor()
+    
+    cursor.execute("SELECT passcode, user_type, user_id FROM Users WHERE user_name = (%s);", (username,))
+    result = cursor.fetchone()
+    
     returnData = {}
+    
     try:
         if password == result[0]:
             returnData["success"] = True
@@ -123,15 +129,13 @@ def validate(data):  # validate password in users table based on given username 
             returnData["userID"] = result[2]
         else:
             returnData["success"] = False
+            
     except:
-        # closeConnection(db,cur)
         returnData["success"] = False
+        
     finally:
-        closeConnection(db, cur)
+        closeConnection(db, cursor)
         return returnData
-
-    # closeConnection(db,cur)
-    # return {"success": False}
 
 
 def searchCourseDatabase(data): #searches the course database based on the provided search parameters (data)
@@ -140,7 +144,7 @@ def searchCourseDatabase(data): #searches the course database based on the provi
     department = data.get("department")
     search = data.get("search")
     
-    db, cur = getCursor()
+    db, cursor = getCursor()
     
     searchInfo = {
         "search" : search, 
@@ -150,16 +154,15 @@ def searchCourseDatabase(data): #searches the course database based on the provi
     
     query = writeQuery(searchInfo)
     
-    cur.execute(query)
+    cursor.execute(query)
     
-    rawCourses = cur.fetchall()
+    rawCourses = cursor.fetchall()
     
     coursesJSON = formatCourseData(rawCourses) #take raw course data and format it for return as JSON
     
     print(coursesJSON)
     
-    closeConnection(db, cur)
-    
+    closeConnection(db, cursor)
     return coursesJSON
 
 
@@ -195,7 +198,6 @@ def writeQuery(searchParameters):
             count += 1 #increment count to show that AND is needed
         
     query = query + ";"
-    
     print(query)
     
     return query
@@ -223,15 +225,15 @@ def formatCourseData(rawCoursesList):
         formattedCourses.append(courseData)
 
     courseJSON = json.dumps(formattedCourses)
-    
     return courseJSON
 
 
 
 def processCourseCodes(courseCodes):
-
+    
     courseInfo = []
     db, cursor = getCursor()
+    
     for courseCode in courseCodes:
         # Prepare the query to fetch course data for each in the given list of course IDs
         query = "SELECT * FROM Courses WHERE course_code IN (%s);" 
@@ -279,6 +281,7 @@ def registerStudent(studentID, courseCode): #takes a student id number and a cou
         
     #if course is full
     failedMessage = ("Sorry, course %s is currently full." % (courseCode))
+    
     closeConnection(db, cursor)
     return {"message": failedMessage}
     
@@ -289,6 +292,8 @@ def hasCapacity(courseCode): #takes a course code, returns False if course is fu
     
     cursor.execute("SELECT current_capacity, max_capacity FROM Courses WHERE course_code = (%s);", (courseCode,))
     caps = cursor.fetchone()
+    
+    closeConnection(db, cursor)
     
     if (caps[0] >= caps[1]): #if current enrollment >= max capacity
         return False
