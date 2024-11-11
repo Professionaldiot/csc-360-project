@@ -33,7 +33,8 @@ def validateLogin():
 @app.route("/search", methods=['POST']) #searches course database based on given search parameters
 def searchCourses():
     data = request.get_json()
-    return searchCourseDatabase(cursor, data)
+    return searchCourseDatabase(data)
+
 
 
 @app.route("/getDepartment", methods =['POST','GET']) #Gets the request for department filter data
@@ -42,9 +43,12 @@ def searchCourses():
 #is passed in json form and the front-end can display the department
 #with knowing the department ID
 def getDepartment():
+    db, cursor = getCursor()
+    cursor.execute("SELECT department_name, department_id FROM Departments;")
     cursor.execute("SELECT department_name, department_id FROM Departments;")
     result = cursor.fetchall()
     departments_Data = [{"departmentID": row[0], "departmentName": row[1]} for row in result]
+    closeConnection(db, cursor)
     return jsonify(departments_Data)
 
 
@@ -69,10 +73,14 @@ def getFacultyCourses():
     data = request.get_json()
     faculty_id = data.get('facultyID')
     
+    db, cursor = getCursor()
+    
     cursor.execute('SELECT course_code FROM Courses WHERE faculty_id = (%s);', (faculty_id,))
     courseCodes = cursor.fetchall()
     
     result = processCourseCodes(courseCodes)
+    
+    closeConnection(db, cursor)
     
     return result
 
@@ -125,11 +133,13 @@ def validate(data):  # validate password in users table based on given username 
     # return {"success": False}
 
 
-def searchCourseDatabase(cur, data): #searches the course database based on the provided search parameters (data)
+def searchCourseDatabase(data): #searches the course database based on the provided search parameters (data)
     
     block = data.get("block")
     department = data.get("department")
     search = data.get("search")
+    
+    db, cur = getCursor()
     
     searchInfo = {
         "search" : search, 
@@ -145,6 +155,10 @@ def searchCourseDatabase(cur, data): #searches the course database based on the 
     
     coursesJSON = formatCourseData(rawCourses) #take raw course data and format it for return as JSON
     
+    print(coursesJSON)
+    
+    closeConnection(db, cur)
+    
     return coursesJSON
 
 
@@ -159,13 +173,13 @@ def writeQuery(searchParameters):
     department = searchParameters["department"]
     
     if search != "" and search != None: #add LIKE [search]
-        clauses.append(" (course_name LIKE '%" + str(search) + "%' OR course_code LIKE '%" + str(search) + "%')") 
+        clauses.append(f" (course_name LIKE '%{search}%' OR course_code LIKE '%{search}%')") 
         
     if block != "" and block != None: #add where block is [block]
-        clauses.append(" block_num = '" + str(block) + "'")
+        clauses.append(" block_num = '%s'" % (block,))
     
     if department != "" and department != None: #add where department is [department]
-        clauses.append(" department_id = '" + str(department) + "'")
+        clauses.append(" department_id = '%s'" % (department,))
     
     if len(clauses) > 0:
         query = query + " WHERE"
@@ -179,6 +193,8 @@ def writeQuery(searchParameters):
             count += 1 #increment count to show that AND is needed
         
     query = query + ";"
+    
+    print(query)
     
     return query
 
@@ -236,10 +252,11 @@ def registerStudent(studentID, courseCode): #takes a student id number and a cou
     #if the class is full, return a message informing the user. if the class has space, increment current capacity for that class,
     #add an entry to the courseRegistration table with that student's id and course code
 
+    db, cursor = getCursor()
+
     if (hasCapacity(courseCode)): #if course has capacity
 
         if hasBlock(studentID,courseCode): # if student is not already registerd for dif class for block
-
         
             #increment current capacity
             cursor.execute("UPDATE Courses SET current_capacity = current_capacity + 1 WHERE course_code = (%s);", (courseCode,))
@@ -247,20 +264,25 @@ def registerStudent(studentID, courseCode): #takes a student id number and a cou
             #add link between student and course to registration table
             cursor.execute("INSERT INTO CourseRegistration (student_id, course_code) VALUES (%s, %s);", (studentID, courseCode))
         
-            db.commit() #makes database changes permanent
-        
             successMessage = ("Student #%s successfully registered for course %s" % (studentID, courseCode))
+            
+            closeConnection(db, cursor)
             return {"message": successMessage}
         
         blockConflictMessage = ("Student #%s has a course scheduled during the same block as %s" % (studentID, courseCode))
+        closeConnection(db, cursor)
         return {"message": blockConflictMessage}
         
     #if course is full
     failedMessage = ("Sorry, course %s is currently full." % (courseCode))
+    closeConnection(db, cursor)
     return {"message": failedMessage}
     
     
 def hasCapacity(courseCode): #takes a course code, returns False if course is full, True if it has space
+    
+    db, cursor = getCursor()
+    
     cursor.execute("SELECT current_capacity, max_capacity FROM Courses WHERE course_code = (%s);", (courseCode,))
     caps = cursor.fetchone()
     
@@ -272,11 +294,15 @@ def hasCapacity(courseCode): #takes a course code, returns False if course is fu
 def hasBlock( studentID, courseCode): #This will check to see if a student has already registered
     # for a course during a given block
 
+    db, cursor = getCursor()
+
     cursor.execute("SELECT course_code FROM CourseRegistration WHERE student_ID = (%s);", (studentID,))
     courses = cursor.fetchall() #this gets all the courses a student is in
 
     cursor.execute("SELECT block_num, course_year FROM Courses WHERE course_code =(%s);",(courseCode))
     blockYear = cursor.fetchone() #This gets the coure they are trying to register's block/year
+
+    closeConnection(db, cursor)
 
     for course in courses: #this goes through all the courses that the student is going to take
         if course[0] == blockYear[0] and course[1] == blockYear [1]: #this checks to see if the year 
@@ -289,6 +315,8 @@ def hasBlock( studentID, courseCode): #This will check to see if a student has a
 def unregisterStudent(studentID, courseCode): #takes a course code and student id, checks if student is enrolled in that course
     #if not, returns a message informing the user. if the student is enrolled, removes them from the course, decreases the current
     #course enrollment by 1
+    
+    db, cursor = getCursor()
     
     #check for any registration entries between this student and this course
     cursor.execute("SELECT entry_id FROM CourseRegistration WHERE student_id = (%s) AND course_code = (%s);", (studentID, courseCode))
@@ -305,15 +333,10 @@ def unregisterStudent(studentID, courseCode): #takes a course code and student i
     #decrease current_capacity
     cursor.execute("UPDATE Courses SET current_capacity = current_capacity - 1 WHERE course_code = (%s);", (courseCode,))
     
-    db.commit() #makes database changes permanent
+    closeConnection(db, cursor)
     
     successMessage = ("Student #%s successfully removed from course %s" % (studentID, courseCode))
     return {"message": successMessage}
         
 
 app.run(host="0.0.0.0", port=5000)
-
-db.commit() #makes database changes permanent
-
-cursor.close()
-db.close()
