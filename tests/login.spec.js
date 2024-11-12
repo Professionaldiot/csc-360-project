@@ -250,6 +250,58 @@ describe('Valid usernames and passwords or guest button allow access to course p
     assert(testLogin("jgreen", "MyAcc3ss!") == "http://10.101.128.56:3000/courses");
   });
 
+  it('Test valid user 21', async function() {
+    assert(testLogin("rhernandez", "Stud#1001") == "http://10.101.128.56:3000/courses");
+  });
+
+  it('Test valid user 22', async function() {
+    assert(testLogin("tlewis", "P@ss2024") == "http://10.101.128.56:3000/courses");
+  });
+
+  it('Test valid user 23', async function() {
+    assert(testLogin("dwalker", "EntrY!333") == "http://10.101.128.56:3000/courses");
+  });
+
+  it('Test valid user 24', async function() {
+    assert(testLogin("jharris", "P@ssword!") == "http://10.101.128.56:3000/courses");
+  });
+
+  it('Test valid user 25', async function() {
+    assert(testLogin("slee", "Acc3ss#09") == "http://10.101.128.56:3000/courses");
+  });
+
+  it('Test valid user 26', async function() {
+    assert(testLogin("mjohnson", "P@ssword123") == "http://10.101.128.56:3000/courses");
+  });
+
+  it('Test valid user 27', async function() {
+    assert(testLogin("kthompson", "Secure#456") == "http://10.101.128.56:3000/courses");
+  });
+
+  it('Test valid user 28', async function() {
+    assert(testLogin("dgarcia", "StrongPass789") == "http://10.101.128.56:3000/courses");
+  });
+
+  it('Test valid user 29', async function() {
+    assert(testLogin("asmith", "passAlice29") == "http://10.101.128.56:3000/courses");
+  });
+
+  it('Test valid user 30', async function() {
+    assert(testLogin("bjohnson", "passBob30") == "http://10.101.128.56:3000/courses");
+  });
+
+  it('Test valid user 31', async function() {
+    assert(testLogin("cwilliams", "passCarol31") == "http://10.101.128.56:3000/courses");
+  });
+
+  it('Test valid user 32', async function() {
+    assert(testLogin("dbrown", "passDavid32") == "http://10.101.128.56:3000/courses");
+  });
+
+  it('Test valid user 33', async function() {
+    assert(testLogin("edavis", "passEve33") == "http://10.101.128.56:3000/courses");
+  });
+  
   it('Test guest button', async function() {
     await driver.findElement(By.css(".MuiButton-outlined")).click();
     assert(window.location.href == "http://10.101.128.56:3000/courses");
