@@ -94,8 +94,9 @@ def register():
     data = request.get_json()
     courseCode = data.get("courseCode")
     studentID = data.get("studentID")
+    entryID = data.get("entryID")
     
-    return registerStudent(studentID, courseCode)
+    return registerStudent(studentID, courseCode, entryID)
 
 
 @app.route("/unregister", methods = ['POST']) #takes a student id and course code, calls function to check
@@ -105,6 +106,7 @@ def unregister():
     data = request.get_json()
     courseCode = data.get("courseCode")
     studentID = data.get("studentID")
+    entryID = data.get ("entryID")
     
     return unregisterStudent(studentID, courseCode)
 
@@ -174,16 +176,23 @@ def writeQuery(searchParameters):
     block = searchParameters["block"]
     department = searchParameters["department"]
     
+    if block != "" and block != None: #add where block is [block]
+        clauses.append("JOIN CourseInstances ON Courses.course_id = CourseInstances.course_id")
+        clauses.append(" CourseInstances.block_num = '%s'" % (block,))
+
     if search != "" and search != None: #add LIKE [search]
         clauses.append(f" (course_name LIKE '%{search}%' OR course_code LIKE '%{search}%')") 
         
-    if block != "" and block != None: #add where block is [block]
-        clauses.append(" block_num = '%s'" % (block,))
     
     if department != "" and department != None: #add where department is [department]
         clauses.append(" department_id = '%s'" % (department,))
     
     if len(clauses) > 0:
+        
+        if block != "" and block != None:
+            query = query + clauses [0]
+            clauses.pop(0)
+
         query = query + " WHERE"
         count = 0
         
@@ -249,18 +258,18 @@ def processCourseCodes(courseCodes):
     return courses 
 
 
-def registerStudent(studentID, courseCode): #takes a student id number and a course code, checks if the class is full.
+def registerStudent(studentID, courseCode, entryID): #takes a student id number, a course code, and entryID checks if the class is full.
     #if the class is full, return a message informing the user. if the class has space, increment current capacity for that class,
     #add an entry to the courseRegistration table with that student's id and course code
 
     db, cursor = getCursor()
 
-    if (hasCapacity(courseCode)): #if course has capacity
+    if (hasCapacity(courseCode, entryID)): #if course has capacity
 
         if hasBlock(studentID,courseCode): # if student is not already registerd for dif class for block
         
             #increment current capacity
-            cursor.execute("UPDATE Courses SET current_capacity = current_capacity + 1 WHERE course_code = (%s);", (courseCode,))
+            cursor.execute("UPDATE CourseInstances SET current_capacity = current_capacity + 1 WHERE course_code = (%s) AND entry_id = (%s);", (courseCode, entryID,))
         
             #add link between student and course to registration table
             cursor.execute("INSERT INTO CourseRegistration (student_id, course_code) VALUES (%s, %s);", (studentID, courseCode))
@@ -281,11 +290,11 @@ def registerStudent(studentID, courseCode): #takes a student id number and a cou
     return {"message": failedMessage}
     
     
-def hasCapacity(courseCode): #takes a course code, returns False if course is full, True if it has space
+def hasCapacity(courseCode, entryID): #takes a course code, returns False if course is full, True if it has space
     
     db, cursor = getCursor()
     
-    cursor.execute("SELECT current_capacity, max_capacity FROM Courses WHERE course_code = (%s);", (courseCode,))
+    cursor.execute("SELECT current_capacity, max_capacity FROM CoursesInstances WHERE course_code = (%s) AND entry_ID = (%s);", (courseCode,entryID,))
     caps = cursor.fetchone()
     
     closeConnection(db, cursor)
@@ -295,7 +304,7 @@ def hasCapacity(courseCode): #takes a course code, returns False if course is fu
     
     return True #if course has capacity
 
-def hasBlock( studentID, courseCode): #This will check to see if a student has already registered
+def hasBlock( studentID, courseCode, entryID): #This will check to see if a student has already registered
     # for a course during a given block
 
     db, cursor = getCursor()
@@ -303,20 +312,20 @@ def hasBlock( studentID, courseCode): #This will check to see if a student has a
     cursor.execute("SELECT course_code FROM CourseRegistration WHERE student_ID = (%s);", (studentID,))
     courses = cursor.fetchall() #this gets all the courses a student is in
 
-    cursor.execute("SELECT block_num, course_year FROM Courses WHERE course_code = (%s);",(courseCode,))
-    blockYear = cursor.fetchone() #This gets the coure they are trying to register's block/year
+    cursor.execute("SELECT block_year, block_num FROM CourseInstances WHERE entry_id(%s);",(entryID,))
+    blockNum = cursor.fetchone() #This gets the coure they are trying to register's block/year
 
     closeConnection(db, cursor)
 
     for course in courses: #this goes through all the courses that the student is going to take
-        if course[0] == blockYear[0] and course[1] == blockYear [1]: #this checks to see if the year 
+        if course[0] == blockNum[0] and course[1] == blockNum [1]: #this checks to see if the year 
             # and block allign with the course
             return False # if it does, it returns false, because there is already a course
     return True # it is able to register on this behalf if there are no other courses
 
 
 
-def unregisterStudent(studentID, courseCode): #takes a course code and student id, checks if student is enrolled in that course
+def unregisterStudent(studentID, courseCode, entryID): #takes a course code and student id, checks if student is enrolled in that course
     #if not, returns a message informing the user. if the student is enrolled, removes them from the course, decreases the current
     #course enrollment by 1
     
@@ -335,7 +344,7 @@ def unregisterStudent(studentID, courseCode): #takes a course code and student i
     cursor.execute("DELETE FROM CourseRegistration WHERE entry_id = (%s);", registrationID)
     
     #decrease current_capacity
-    cursor.execute("UPDATE Courses SET current_capacity = current_capacity - 1 WHERE course_code = (%s);", (courseCode,))
+    cursor.execute("UPDATE CourseInstances SET current_capacity = current_capacity - 1 WHERE entryID = (%s);", (entryID,))
     
     closeConnection(db, cursor)
     

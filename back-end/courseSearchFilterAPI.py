@@ -49,11 +49,17 @@ def fetchCourses(block = None, department = None): #returns raw course data retr
         cursor.execute("SELECT * FROM Courses WHERE block = %s;", (block,))
         
     else:
-        cursor.execute("SELECT * FROM Courses WHERE department = %s AND block = %s", (department, block))
-        
-    result = cursor.fetchall()
-    
-    return result #will return list of raw course data
+        cursor.execute("""
+            SELECT * 
+            FROM Courses departmentType
+            JOIN CourseInstances blockType ON departmentType.course_id = blockType.course_id
+            WHERE departmentType.department = %s AND blockType.block_num = %s;
+        """, (department, block))
+
+        result = cursor.fetchall()
+
+    return result
+   
 
 #takes a dictionary of search parameters, returns an SQL query to execute the corresponding search
 def writeQuery(searchParameters):
