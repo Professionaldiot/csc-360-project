@@ -103,9 +103,10 @@ export default function Courses() {
     useEffect(() => {
 
     }, )
-  
+
     const { userData, setUserData, isLogged, setIsLogged } = useGlobalState();
     console.log(userData + " " + isLogged);
+
     return (
         <>
             <div className='loginBack'>
@@ -124,6 +125,7 @@ export default function Courses() {
                                     setSearchText(event.target.value);
                                 }}
                             />
+
                             <Button variant='contained' onClick={() => {
                                 updateCourses()
                                 console.log(courseList)
@@ -176,6 +178,7 @@ export default function Courses() {
                                     <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={6}>Block 6</MenuItem>
                                     <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={7}>Block 7</MenuItem>
                                     <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={8}>Block 8</MenuItem>
+
                                 </Select>
                             </FormControl>
                         </CardContent>
@@ -185,7 +188,7 @@ export default function Courses() {
                     <br />
                     <br />
                     <br />
-
+                    
                     <Stack spacing={2} sx={{ float: 'left', marginLeft: '48px', width: '950px', textAlign: 'left' }}>
 
                         {courseList.length > 0 ? (
@@ -194,12 +197,12 @@ export default function Courses() {
                             ))
                         )
                             :
-                            (<Typography>No courses available.</Typography>)
+                            (<p>No Courses to Display.</p>)
                         }
                     </Stack>
                 </Box>
             </div>
         </>
     );
-    //    
+
 }; 
