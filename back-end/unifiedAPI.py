@@ -328,8 +328,6 @@ def registerStudent(studentID, entryID): #takes a student id number and a course
             #add link between student and course to registration table
             cursor.execute("INSERT INTO CourseRegistration (student_id, course_code, instance_id) VALUES (%s, %s, %s);", (studentID, courseCode, entryID))
         
-            cursor.execute #for display message
-        
             successMessage = ("Student #%s successfully registered for course %s" % (studentID, courseCode))
             
             closeConnection(db, cursor)
