@@ -2,22 +2,18 @@ import './App.css';
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
-import { createTheme, FormHelperText } from '@mui/material';
 import FormControl, { useFormControl } from '@mui/material/FormControl';
 import Button from '@mui/material/Button';
 import { Card, CardActions, CardContent, Typography } from '@mui/material';
-import FilledInput from '@mui/material/FilledInput';
 import InputLabel from '@mui/material/InputLabel';
-import Avatar from '@mui/material/Avatar';
-import { Outlet, Link } from 'react-router-dom'
-import Menu from '@mui/material/Menu';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import Stack from '@mui/material/Stack';
 import { styled } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
-import { positions } from '@mui/system';
-import { useGlobalState } from '../functions/globalState';
+import fetchCourses from "../functions/fetchCourses.js";
+import { useGlobalState } from '../functions/globalState.js';
+
 
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: '#fff',
@@ -50,7 +46,7 @@ export default function Courses() {
     return (
         <>
             <div className='loginBack'>
-                <Box component='section' sx={{maxHeight: '100%', width: '100vw', flexDirection: 'column', justifyContent: 'space-between', alignItems: 'end', position: "absolute", top: '25px', overflow: 'auto' }}>
+                <Box component='section' sx={{ maxHeight: '95.5%', width: '100vw', flexDirection: 'column', justifyContent: 'space-between', alignItems: 'end', position: "absolute", top: '25px', overflow: 'auto' }}>
                     <Typography variant='h3' component='div' sx={{ textAlign: 'Left', marginLeft: '48px' }}>Courses</Typography>
                     <br />
                     <Card sx={{ width: '950px', float: 'left', marginRight: "48px", marginLeft: '48px' }}>
