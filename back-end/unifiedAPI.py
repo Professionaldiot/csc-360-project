@@ -318,9 +318,9 @@ def registerStudent(studentID, entryID): #takes a student id number and a course
     cursor.execute("SELECT course_code FROM CourseInstances WHERE entry_id = %s;", (entryID,)) #for displaying course code
     courseCode = cursor.fetchone()[0]
 
-    if (hasCapacity(entryID)): #if course has capacity
+    if (hasCapacity(entryID)) and (preReqCheck(studentID, entryID)): #if course has capacity
 
-        if hasBlock(studentID, entryID): # if student is not already registerd for dif class for block
+        if checkAdjuncts(entryID) or hasBlock(studentID, entryID): # if student is not already registerd for dif class for block
         
             #increment current capacity
             cursor.execute("UPDATE CourseInstances SET current_capacity = current_capacity + 1 WHERE entry_id = %s;", (entryID,))
@@ -337,8 +337,11 @@ def registerStudent(studentID, entryID): #takes a student id number and a course
         closeConnection(db, cursor)
         return {"message": blockConflictMessage}
         
-    #if course is full
-    failedMessage = ("Sorry, course %s is currently full." % (courseCode))
+    if (hasCapacity(entryID)) == False:
+        failedMessage = ("Sorry, course %s is currently full." % (courseCode))
+    else:
+        failedMessage = (" Sorry, course %s does not have requiremented pre-reqs." % (courseCode))
+
     
     closeConnection(db, cursor)
     return {"message": failedMessage}
@@ -387,6 +390,45 @@ def hasBlock(studentID, entryID): #This will check to see if a student has alrea
         return True
     
     return False #slot is already occupied
+
+def preReqCheck (studentID, entryID):
+    # This checks if a students has the necessary credits for the course
+
+    db, cursor = getcursor () #opens cursor
+
+    cursor.execute("SELECT course_code FROM CourseInstance WHERE entry_id = (%s) ;" % (entryID))
+    courseCode = cursor.fetchall () # Gets course code to be able to find in the preReq
+
+    cursor.execute("SELECT prereq_code FROM Prerequisites WHERE entry_id = (%s) ;" % (courseCode))
+    preReqs = cursor.fetchall () # gets the preReqs for courses
+
+    cursor.execute("SELECT course_code FROM Prerequisites WHERE student_id = (%s) ;" % (studentID))
+    takenCourses = cursor.fetchall () # gets the course history of given student
+
+    closeConnection(db, cursor) # closes cursor before the return statement
+
+
+    for courses in preReqs: # this and takes the courses in the preReqs individually
+        if courses in takenCourses: # sees if pre-req has been taken
+            continue #if so, goes to next pre req
+        else:
+            return False # if not, then it stops
+    return True
+
+def checkAdjuncts (entryID) : #checks to see if course is adjunct to reduce scheduling conflict errors
+
+        db, cursor = getCursor() # opens the cursor
+
+        cursor.execute("SELECT block_num FROM CourseInstance WHERE entry_id = (%s) ;" % (entryID))
+        blockNum = cursor.fetchone()  # this gives us the block number
+
+        blockNum = blockNum [0] #this makes sure the block number is a string for comparison
+
+        closeConnection(db, cursor) # this closes the cursor before returning a value
+
+        if blockNum == "B9": # checks to see if it is adjunct block
+            return True
+        return False
 
 
 def unregisterStudent(studentID, entryID): #takes a course code and student id, checks if student is enrolled in that course
