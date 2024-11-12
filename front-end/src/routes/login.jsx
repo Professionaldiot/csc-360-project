@@ -91,10 +91,11 @@ export default function Login() {
     it will also bring you to the courses
     */
     event.preventDefault();
-    const willLogin = {username: "jsmith", userID: "1", userLevel: "student"}
+    const willLogin = await fetchLogin(values.username, values.password);
     // const willLogin = await fetchLogin(values.username, values.password);
     console.log(values.username, " ", values.password);
-    if (true) {
+    console.log(willLogin);
+    if (willLogin.success) {
       setUserData(willLogin);
       setIsLogged(true)   ;
       navigate("/courses");
