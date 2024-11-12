@@ -157,7 +157,7 @@ describe('Valid usernames and passwords or guest button allow access to course p
     await driver.findElement(By.id("login-username")).sendKeys(username);
     await driver.findElement(By.id("login-password")).sendKeys(password);
     await driver.findElement(By.css(".MuiButton-contained")).click();
-    return window.location.href.toString();
+    return;
   };
 
 //Creates driver and sends it to login
@@ -171,140 +171,173 @@ describe('Valid usernames and passwords or guest button allow access to course p
   });
 
   it('Test valid user 1', async function() {
-    assert(testLogin("jsmith", "P@ss1234") == "http://10.101.128.56:3000/courses");
+    testLogin("jsmith", "P@ss1234");
+    await driver.wait(until.urlIs('http://10.101.128.56:3000/courses'), 2000);
   });
 
   it('Test valid user 2', async function() {
-    assert(testLogin("mjones", "Secur3#5") == "http://10.101.128.56:3000/courses");
+    testLogin("mjones", "Secur3#5");
+    await driver.wait(until.urlIs('http://10.101.128.56:3000/courses'), 2000);
   });
 
   it('Test valid user 3', async function() {
-    assert(testLogin("alee", "abcD!234") == "http://10.101.128.56:3000/courses");
+    testLogin("alee", "abcD!234");
+    await driver.wait(until.urlIs('http://10.101.128.56:3000/courses'), 2000);
   });
 
   it('Test valid user 4', async function() {
-    assert(testLogin("bking", "Qwerty#6") == "http://10.101.128.56:3000/courses");
+    testLogin("bking", "Qwerty#6");
+    await driver.wait(until.urlIs('http://10.101.128.56:3000/courses'), 2000);
   });
 
   it('Test valid user 5', async function() {
-    assert(testLogin("cgarcia", "Pass#789") == "http://10.101.128.56:3000/courses");
+    testLogin("cgarcia", "Pass#789");
+    await driver.wait(until.urlIs('http://10.101.128.56:3000/courses'), 2000);
   });
 
   it('Test valid user 6', async function() {
-    assert(testLogin("dmartinez", "SafeP@55") == "http://10.101.128.56:3000/courses");
+    testLogin("dmartinez", "SafeP@55");
+    await driver.wait(until.urlIs('http://10.101.128.56:3000/courses'), 2000);
   });
 
   it('Test valid user 7', async function() {
-    assert(testLogin("eflores", "987Xyz!") == "http://10.101.128.56:3000/courses");
+    testLogin("eflores", "987Xyz!");
+    await driver.wait(until.urlIs('http://10.101.128.56:3000/courses'), 2000);
   });
 
   it('Test valid user 8', async function() {
-    assert(testLogin("hthompson", "Login123") == "http://10.101.128.56:3000/courses");
+    testLogin("hthompson", "Login123");
+    await driver.wait(until.urlIs('http://10.101.128.56:3000/courses'), 2000);
   });
 
   it('Test valid user 9', async function() {
-    assert(testLogin("lroberts", "MyPass#9") == "http://10.101.128.56:3000/courses");
+    testLogin("lroberts", "MyPass#9");
+    await driver.wait(until.urlIs('http://10.101.128.56:3000/courses'), 2000);
   });
 
   it('Test valid user 10', async function() {
-    assert(testLogin("mclark", "New@Pass") == "http://10.101.128.56:3000/courses");
+    testLogin("mclark", "New@Pass");
+    await driver.wait(until.urlIs('http://10.101.128.56:3000/courses'), 2000);
   });
 
   it('Test valid user 11', async function() {
-    assert(testLogin("abrown", "Stud3nt#1") == "http://10.101.128.56:3000/courses");
+    testLogin("abrown", "Stud3nt#1");
+    await driver.wait(until.urlIs('http://10.101.128.56:3000/courses'), 2000);
   });
 
   it('Test valid user 12', async function() {
-    assert(testLogin("jwilson", "P@ssW0rd") == "http://10.101.128.56:3000/courses");
+    testLogin("jwilson", "P@ssW0rd");
+    await driver.wait(until.urlIs('http://10.101.128.56:3000/courses'), 2000);
   });
 
   it('Test valid user 13', async function() {
-    assert(testLogin("kdavis", "Hel10#45") == "http://10.101.128.56:3000/courses");
+    testLogin("kdavis", "Hel10#45");
+    await driver.wait(until.urlIs('http://10.101.128.56:3000/courses'), 2000);
   });
 
   it('Test valid user 14', async function() {
-    assert(testLogin("mwhite", "Secure#21") == "http://10.101.128.56:3000/courses");
+    testLogin("mwhite", "Secure#21");
+    await driver.wait(until.urlIs('http://10.101.128.56:3000/courses'), 2000);
   });
 
   it('Test valid user 15', async function() {
-    assert(testLogin("kmoore", "Acce$$89") == "http://10.101.128.56:3000/courses");
+    testLogin("kmoore", "Acce$$89");
+    await driver.wait(until.urlIs('http://10.101.128.56:3000/courses'), 2000);
   });
 
   it('Test valid user 16', async function() {
-    assert(testLogin("jyoung", "EntrY@55") == "http://10.101.128.56:3000/courses");
+    testLogin("jyoung", "EntrY@55");
+    await driver.wait(until.urlIs('http://10.101.128.56:3000/courses'), 2000);
   });
 
   it('Test valid user 17', async function() {
-    assert(testLogin("jhall", "Lock3r#2") == "http://10.101.128.56:3000/courses");
+    testLogin("jhall", "Lock3r#2");
+    await driver.wait(until.urlIs('http://10.101.128.56:3000/courses'), 2000);
   });
 
   it('Test valid user 18', async function() {
-    assert(testLogin("tlopez", "Uniqu3#12") == "http://10.101.128.56:3000/courses");
+    testLogin("tlopez", "Uniqu3#12");
+    await driver.wait(until.urlIs('http://10.101.128.56:3000/courses'), 2000);
   });
 
   it('Test valid user 19', async function() {
-    assert(testLogin("wwright", "SafeKey#3") == "http://10.101.128.56:3000/courses");
+    testLogin("wwright", "SafeKey#3");
+    await driver.wait(until.urlIs('http://10.101.128.56:3000/courses'), 2000);
   });
 
   it('Test valid user 20', async function() {
-    assert(testLogin("jgreen", "MyAcc3ss!") == "http://10.101.128.56:3000/courses");
+    testLogin("jgreen", "MyAcc3ss!");
+    await driver.wait(until.urlIs('http://10.101.128.56:3000/courses'), 2000);
   });
 
   it('Test valid user 21', async function() {
-    assert(testLogin("rhernandez", "Stud#1001") == "http://10.101.128.56:3000/courses");
+    testLogin("rhernandez", "Stud#1001");
+    await driver.wait(until.urlIs('http://10.101.128.56:3000/courses'), 2000);
   });
 
   it('Test valid user 22', async function() {
-    assert(testLogin("tlewis", "P@ss2024") == "http://10.101.128.56:3000/courses");
+    testLogin("tlewis", "P@ss2024");
+    await driver.wait(until.urlIs('http://10.101.128.56:3000/courses'), 2000);
   });
 
   it('Test valid user 23', async function() {
-    assert(testLogin("dwalker", "EntrY!333") == "http://10.101.128.56:3000/courses");
+    testLogin("dwalker", "EntrY!333");
+    await driver.wait(until.urlIs('http://10.101.128.56:3000/courses'), 2000);
   });
 
   it('Test valid user 24', async function() {
-    assert(testLogin("jharris", "P@ssword!") == "http://10.101.128.56:3000/courses");
+    testLogin("jharris", "P@ssword!");
+    await driver.wait(until.urlIs('http://10.101.128.56:3000/courses'), 2000);
   });
 
   it('Test valid user 25', async function() {
-    assert(testLogin("slee", "Acc3ss#09") == "http://10.101.128.56:3000/courses");
+    testLogin("slee", "Acc3ss#09");
+    await driver.wait(until.urlIs('http://10.101.128.56:3000/courses'), 2000);
   });
 
   it('Test valid user 26', async function() {
-    assert(testLogin("mjohnson", "P@ssword123") == "http://10.101.128.56:3000/courses");
+    testLogin("mjohnson", "P@ssword123");
+    await driver.wait(until.urlIs('http://10.101.128.56:3000/courses'), 2000);
   });
 
   it('Test valid user 27', async function() {
-    assert(testLogin("kthompson", "Secure#456") == "http://10.101.128.56:3000/courses");
+    testLogin("kthompson", "Secure#456");
+    await driver.wait(until.urlIs('http://10.101.128.56:3000/courses'), 2000);
   });
 
   it('Test valid user 28', async function() {
-    assert(testLogin("dgarcia", "StrongPass789") == "http://10.101.128.56:3000/courses");
+    testLogin("dgarcia", "StrongPass789");
+    await driver.wait(until.urlIs('http://10.101.128.56:3000/courses'), 2000);
   });
 
   it('Test valid user 29', async function() {
-    assert(testLogin("asmith", "passAlice29") == "http://10.101.128.56:3000/courses");
+    testLogin("asmith", "passAlice29");
+    await driver.wait(until.urlIs('http://10.101.128.56:3000/courses'), 2000);
   });
 
   it('Test valid user 30', async function() {
-    assert(testLogin("bjohnson", "passBob30") == "http://10.101.128.56:3000/courses");
+    testLogin("bjohnson", "passBob30");
+    await driver.wait(until.urlIs('http://10.101.128.56:3000/courses'), 2000);
   });
 
   it('Test valid user 31', async function() {
-    assert(testLogin("cwilliams", "passCarol31") == "http://10.101.128.56:3000/courses");
+    testLogin("cwilliams", "passCarol31");
+    await driver.wait(until.urlIs('http://10.101.128.56:3000/courses'), 2000);
   });
 
   it('Test valid user 32', async function() {
-    assert(testLogin("dbrown", "passDavid32") == "http://10.101.128.56:3000/courses");
+    testLogin("dbrown", "passDavid32");
+    await driver.wait(until.urlIs('http://10.101.128.56:3000/courses'), 2000);
   });
 
   it('Test valid user 33', async function() {
-    assert(testLogin("edavis", "passEve33") == "http://10.101.128.56:3000/courses");
+    testLogin("edavis", "passEve33");
+    await driver.wait(until.urlIs('http://10.101.128.56:3000/courses'), 2000);
   });
   
   it('Test guest button', async function() {
     await driver.findElement(By.css(".MuiButton-outlined")).click();
-    assert(window.location.href == "http://10.101.128.56:3000/courses");
+    await driver.wait(until.urlIs('http://10.101.128.56:3000/courses'), 2000);
   });
 });
 
@@ -315,14 +348,14 @@ describe('Valid usernames and passwords or guest button allow access to course p
 describe('Invalid usernames and passwords do not allow log in', function() {
   this.timeout(30000);
   let driver;
+  let url;
 
   //Inputs username and password for each test and checks if webpage changed
   async function testLogin(username, password) {
     await driver.findElement(By.id("login-username")).sendKeys(username);
     await driver.findElement(By.id("login-password")).sendKeys(password);
     await driver.findElement(By.css(".MuiButton-contained")).click();
-    driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-    return window.location.href.toString();
+    return;
   };
 
 //Creates driver and sends it to login
@@ -336,40 +369,67 @@ describe('Invalid usernames and passwords do not allow log in', function() {
   });
 
   it('Test mismatched information 1', async function() {
-    assert(testLogin("jgreen", "SafeKey#3") == "http://10.101.128.56:3000/login");
+    testLogin("jgreen", "SafeKey#3");
+    await driver.sleep(2000);
+    url = await driver.executeScript("return window.location.href");
+    assert(url == "http://10.101.128.56:3000/login");
   });
 
   it('Test mismatched information 2', async function() {
-    assert(testLogin("jsmith", "MyAcc3ss!") == "http://10.101.128.56:3000/login");
+    testLogin("jsmith", "MyAcc3ss!");
+    await driver.sleep(2000);
+    url = await driver.executeScript("return window.location.href");
+    assert(url == "http://10.101.128.56:3000/login");
   });
 
   it('Test mismatched information 3', async function() {
-    assert(testLogin("nobody", "notapa$$word") == "http://10.101.128.56:3000/login");
+    testLogin("nobody", "notapa$$word");
+    await driver.sleep(2000);
+    url = await driver.executeScript("return window.location.href");
+    assert(url == "http://10.101.128.56:3000/login");
   });
 
   it('Test mismatched information 4', async function() {
-    assert(testLogin("john45", "MyAcc3ss") == "http://10.101.128.56:3000/login");
+    testLogin("john45", "MyAcc3ss");
+    await driver.sleep(2000);
+    url = await driver.executeScript("return window.location.href");
+    assert(url == "http://10.101.128.56:3000/login");
   });
 
   it('Test empty string 1', async function() {
-    assert(testLogin("", "") == "http://10.101.128.56:3000/login");
+    testLogin("", "");
+    await driver.sleep(2000);
+    url = await driver.executeScript("return window.location.href");
+    assert(url == "http://10.101.128.56:3000/login");
   });
 
   it('Test empty string 2', async function() {
-    assert(testLogin("jsmith", "") == "http://10.101.128.56:3000/login");
+    testLogin("jsmith", "");
+    await driver.sleep(2000);
+    url = await driver.executeScript("return window.location.href");
+    assert(url == "http://10.101.128.56:3000/login");
   });
 
   it('Test empty string 3', async function() {
-    assert(testLogin("", "MyAcc3ss!") == "http://10.101.128.56:3000/login");
+    testLogin("", "MyAcc3ss!");
+    await driver.sleep(2000);
+    url = await driver.executeScript("return window.location.href");
+    assert(url == "http://10.101.128.56:3000/login");
   });
 
   it('Test long string 1', async function() {
-    assert(testLogin("thisisareallylongstringforausernameithinkitsoverthirtttwocharactersaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-      "MyAcc3ss!") == "http://10.101.128.56:3000/login");
+    testLogin("thisisareallylongstringforausernameithinkitsoverthirtttwocharactersaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "MyAcc3ss!");
+    await driver.sleep(2000);
+    url = await driver.executeScript("return window.location.href");
+    assert(url == "http://10.101.128.56:3000/login");
   });
 
   it('Test long string 2', async function() {
-    assert(testLogin("jsmith",
-      "thisisareallylongstringforapasswordithinkitsoverthirtttwocharacters") == "http://10.101.128.56:3000/login");
+    testLogin("jsmith",
+      "thisisareallylongstringforapasswordithinkitsoverthirtttwocharacters");
+    await driver.sleep(2000);
+    url = await driver.executeScript("return window.location.href");
+    assert(url == "http://10.101.128.56:3000/login");
   });
 });
