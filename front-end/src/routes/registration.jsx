@@ -60,12 +60,12 @@ export default function Registration() {
     const [searchText, setSearchText] = useState('');
 
     const updateCourses = async () => {
-        const asyncCourseList = await TestFetchCourses(searchText, block, dept);
+        const asyncCourseList = await fetchCourses(searchText, block, dept);
         setCourseList(asyncCourseList)
         console.log(courseList)
     };
 
-    const [courseList, setCourseList] = React.useState([{}]);
+    const [courseList, setCourseList] = React.useState([]);
 
     function TestFetchCourses(search, blockNum, department) {
         if (department === 1) {
@@ -109,10 +109,6 @@ export default function Registration() {
     useEffect(() => {
         console.log(courseList);
     }, [courseList]);
-
-    useEffect(() => {
-
-    },)
 
     const { userData, setUserData, isLogged, setIsLogged } = useGlobalState();
 

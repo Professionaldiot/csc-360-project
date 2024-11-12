@@ -88,7 +88,7 @@ export default function Courses() {
         console.log(courseList)
     };
 
-    const [courseList, setCourseList] = React.useState([{}]);
+    const [courseList, setCourseList] = React.useState([]);
 
     useEffect(() => {
         console.log(courseList);
