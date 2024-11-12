@@ -39,14 +39,14 @@ export default function Schedule() {
     console.log(userData);
 
     const [userClasses, setUserClasses] = React.useState([]);
-    if (userData.isLogged) 
+    
     React.useEffect(() => {
         const fetchClassList = async () => {
             const classList = await fetchSchedule(userData.userID)
             setUserClasses(classList)
         }
     fetchClassList()
-    }, []);
+    }, [userClasses, setUserClasses]);
     // console.log(userClasses);
     if (userData.user_type === "student") {
         // Show schedule page
