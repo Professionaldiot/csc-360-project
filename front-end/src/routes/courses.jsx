@@ -21,7 +21,6 @@ import { positions } from '@mui/system';
 import fetchCourses from "../functions/fetchCourses.js";
 import { useGlobalState } from '../functions/globalState.js';
 
-const { userData, setUserData, isLogged, setIsLogged } = useGlobalState();
 
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: '#fff',
@@ -104,7 +103,9 @@ export default function Courses() {
     useEffect(() => {
 
     }, )
-
+  
+    const { userData, setUserData, isLogged, setIsLogged } = useGlobalState();
+    console.log(userData + " " + isLogged);
     return (
         <>
             <div className='loginBack'>
