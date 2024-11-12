@@ -44,30 +44,56 @@ export default function Root() {
             return 'login'
         }
     }
-
-    return (
-        <>
-            {/*Header business here*/}
-            <div className='headContainer'>
-                <div className='selfService-Header'>
-                    <img
-                        //cornell logo
-                        src={"https://www.cornellcollege.edu/assets/production/images/cornell_logo_white.png"}
-                        className="cornell-logo"
-                        alt="logo" />
+    if (isLogged) {
+        return (
+            <>
+                {/*Header business here*/}
+                <div className='headContainer'>
+                    <div className='selfService-Header'>
+                        <img
+                            //cornell logo
+                            src={"https://www.cornellcollege.edu/assets/production/images/cornell_logo_white.png"}
+                            className="cornell-logo"
+                            alt="logo" />
+                    </div>
+                    <div className='subHeader'>
+                        <Button onClick={() => { navigate("/courses") }}>Courses</Button>
+                        <Button onClick={() => { navigate("/schedule") }}>Schedule</Button>
+                        <Button onClick={() => { navigate("/registration") }}>Registration</Button>
+                    </div>
+                    <div className='selfService-Header'>
+                        <Link to={'schedule'}><Avatar alt="Schedule" sx={{ width: 56, height: 56 }} /></Link>
+                    </div>
+                    <div id='detail'>
+                        <Outlet />
+                    </div>
                 </div>
-                <div className='subHeader'>
-                    <Button onClick={() => { navigate("/courses") }}>Courses</Button>
-                    <Button onClick={() => { navigate("/schedule") }}>Schedule</Button>
-                    <Button onClick={() => { navigate("/registration") }}>Registration</Button>
+            </>
+        )
+    }
+    else {
+        return (
+            <>
+                {/*Header business here*/}
+                <div className='headContainer'>
+                    <div className='selfService-Header'>
+                        <img
+                            //cornell logo
+                            src={"https://www.cornellcollege.edu/assets/production/images/cornell_logo_white.png"}
+                            className="cornell-logo"
+                            alt="logo" />
+                    </div>
+                    <div className='subHeader'>
+                        <Button onClick={() => { navigate("/courses") }}>Courses</Button>
+                    </div>
+                    <div className='selfService-Header'>
+                        <Link to={'login'}><Avatar alt="Login" sx={{ width: 56, height: 56 }} /></Link>
+                    </div>
+                    <div id='detail'>
+                        <Outlet />
+                    </div>
                 </div>
-                <div className='selfService-Header'>
-                    <Link to={checkLogged}><Avatar alt="Login" sx={{ width: 56, height: 56 }} /></Link>
-                </div>
-                <div id='detail'>
-                    <Outlet />
-                </div>
-            </div>
-        </>
-    )
+            </>
+        )
+    }
 }
