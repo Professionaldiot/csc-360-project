@@ -65,12 +65,11 @@ def getRegisteredCourses():
     cursor.execute('SELECT instance_id FROM CourseRegistration WHERE student_id = %s;', (student_id,))
     entryIDs = cursor.fetchall()
     
-    result = processCourseCodes(entryIDs)
+    result = processCourseCodes(entryIDs, sort="block")
     print(result)
     
     closeConnection(db, cursor)
     return result
-
 
 
 @app.route("/getFacultyCourses", methods=['POST']) #takes a faculty's user id, returns list of course codes
@@ -80,10 +79,10 @@ def getFacultyCourses():
     
     db, cursor = getCursor()
     
-    cursor.execute('SELECT course_code FROM CourseInstances WHERE faculty_id = %s;', (faculty_id,))
+    cursor.execute('SELECT entry_id FROM CourseInstances WHERE faculty_id = %s;', (faculty_id,))
     courseCodes = cursor.fetchall()
     
-    result = processCourseCodes(courseCodes)
+    result = processCourseCodes(courseCodes, sort="block")
     
     closeConnection(db, cursor)
     return result
@@ -138,7 +137,7 @@ def validate(data):  # validate password in users table based on given username 
         return returnData
 
 
-def searchCourseDatabase(data): #searches the course database based on the provided search parameters (data)
+def searchCourseDatabase(data, sort="code"): #searches the course database based on the provided search parameters (data)
     
     block = data.get("block")
     department = data.get("department")
@@ -158,7 +157,7 @@ def searchCourseDatabase(data): #searches the course database based on the provi
     
     entryIDs = cursor.fetchall()
     
-    coursesJSON = processCourseCodes(entryIDs) #take raw course data and format it for return as JSON
+    coursesJSON = processCourseCodes(entryIDs, sort) #take raw course data and format it for return as JSON
     
     print(coursesJSON)
     
@@ -171,20 +170,47 @@ def writeQuery(searchParameters):
     
     db, cursor = getCursor()
     
-    clauses = []
+    searchClauses = []
+    filterClauses = []
     
     search = searchParameters["search"]
     block = searchParameters["block"]
     department = searchParameters["department"]
     
-    searchQuery = f"SELECT course_code FROM Courses WHERE (course_name LIKE '%{search}%' OR course_code LIKE '%{search}%');"
+    baseQuery = "SELECT course_code FROM Courses"
+    
+    searchClause = f" (course_name LIKE '%{search}%' OR course_code LIKE '%{search}%')"
+    
+    departmentClause = f" department_id = '{department}'"
     
     filterQuery = "SELECT entry_id FROM CourseInstances"
     
     blockClause = f" block_num = '{block}'"
-    departmentClause = f" department_id = '{department}'"
     
     if search != "" and search != None: 
+        #search and department are handled togther because they are both in courses table
+        searchClauses.append(searchClause)
+        
+    if department != "" and department != None: 
+        searchClauses.append(departmentClause)
+        
+    if len(searchClauses) > 0:
+        baseQuery = baseQuery + " WHERE"
+        count = 0
+        
+        print(searchClauses)
+        
+        for clause in searchClauses:
+            if count > 0: #first clause to be added wont use AND
+                baseQuery = baseQuery + " AND"
+            
+            baseQuery = baseQuery + clause
+            count += 1 #increment count to show that AND is needed
+        
+        searchQuery = baseQuery + ";"
+        
+        print(f"search query: {searchQuery}")
+        
         cursor.execute(searchQuery)
         coursesData = cursor.fetchall()
         
@@ -201,37 +227,36 @@ def writeQuery(searchParameters):
             
         courseCodes = courseCodes + ")"
         
-        searchClause = f" course_code IN {courseCodes}"
+        courseCodeClause = f" course_code IN {courseCodes}"
     
-    query = filterQuery
-    
-    if search != "" and search != None:
-        clauses.append(searchClause)
+    if (search != "" and search != None) or (department != "" and department != None):
+        if courseCodes == "()": #if no courses match terms, return empty search
+            courseCodeClause = " course_code IN (-1)"
+        filterClauses.append(courseCodeClause)
     if block != "" and block != None: 
-        clauses.append(blockClause)
-    if department != "" and department != None:
-        clauses.append(departmentClause)
+        filterClauses.append(blockClause)
+    #department accounted for in search query
         
-    if len(clauses) > 0:
-        query = query + " WHERE"
+    if len(filterClauses) > 0:
+        filterQuery = filterQuery + " WHERE"
         count = 0
         
-        for clause in clauses:
+        for clause in filterClauses:
             if count > 0: #first clause to be added wont use AND
-                query = query + " AND"
+                filterQuery = filterQuery + " AND"
                 
-            query = query + clause
+            filterQuery = filterQuery + clause
             count += 1 #increment count to show that AND is needed
     
-    query = query + ";"
-    print(query)
+    filterQuery = filterQuery + ";"
+    print(filterQuery)
     
     closeConnection(db, cursor)
-    return query
+    return filterQuery
 
 
 #takes list of dictionaries containing "instanceData" and "courseData" from processCourseCodes function
-def formatCourseData(courseDictList):
+def formatCourseData(courseDictList, sort=None): #takes "block", "name", or "code" for sort
     
     formattedCourses = []
     
@@ -253,12 +278,20 @@ def formatCourseData(courseDictList):
         
         formattedCourses.append(courseData)
 
+    match sort:
+        case "block":
+            formattedCourses = sorted(formattedCourses, key=lambda d : d["blockNum"])
+        case "name":
+            formattedCourses = sorted(formattedCourses, key=lambda d : d["courseName"])
+        case "code":
+            formattedCourses = sorted(formattedCourses, key=lambda d : d["courseCode"])
+
     courseJSON = json.dumps(formattedCourses)
     return courseJSON
 
 
 #list of entry ids returned from select query
-def processCourseCodes(entryIDs):
+def processCourseCodes(entryIDs, sort=None): #takes "block" and "name" for sort
     
     courseInfo = []
     db, cursor = getCursor()
@@ -278,7 +311,7 @@ def processCourseCodes(entryIDs):
         courseInfo.append({"instanceData":instanceData, "courseData":courseData})
     
     #format results as JSON
-    courses = formatCourseData(courseInfo)
+    courses = formatCourseData(courseInfo, sort) #passes sort params
 
     closeConnection(db, cursor)
     return courses 
