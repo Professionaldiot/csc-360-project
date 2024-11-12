@@ -1,22 +1,9 @@
 import './App.css';
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import TextField from '@mui/material/TextField';
-import { circularProgressClasses, createTheme, FormHelperText } from '@mui/material';
-import FormControl, { useFormControl } from '@mui/material/FormControl';
-import Button from '@mui/material/Button';
-import { Card, CardActions, CardContent, Typography } from '@mui/material';
-import FilledInput from '@mui/material/FilledInput';
-import InputLabel from '@mui/material/InputLabel';
-import Avatar from '@mui/material/Avatar';
-import { Outlet, Link } from 'react-router-dom'
-import Menu from '@mui/material/Menu';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
 import Stack from '@mui/material/Stack';
 import { styled } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
-import { positions } from '@mui/system';
 import fetchSchedule from "../functions/fetchSchedule.js";
 import { useGlobalState } from '../functions/globalState.js';
 import { useNavigate } from 'react-router-dom';
