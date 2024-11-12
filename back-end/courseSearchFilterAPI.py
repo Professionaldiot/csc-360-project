@@ -9,6 +9,9 @@ db = conn.connect(
     host="10.101.128.56",
     port="6033",
     user="username",
+    host="10.101.128.56",
+    port="6033",
+    user="username",
     password="123",
     database="SelfService"
     )
@@ -18,9 +21,18 @@ cursor = db.cursor()
 #@app.route("/search", methods=['POST']) #recieves POST request containing block and department filter info, requests corresponding info from database,
 def searchCourseDatabase(): #formats course data, and returns it for display
     
-    searchParameters = request.get_json()
-    block = searchParameters.get("block")
-    department = searchParameters.get("department")
+    data = request.get_json()
+    block = data.get("block")
+    department = data.get("department")
+    search = data.get("search")
+   
+    searchInfo = {
+        "search" : search, 
+        "block" : block, 
+        "department" : department
+        }
+    
+    query = writeQuery(searchInfo)
     
     rawCourses = fetchCourses(block, department)
     
@@ -52,14 +64,14 @@ def formatCourseData(rawCoursesList):
     formattedCourses = []
     
     for rawCourse in rawCoursesList:
-        courseData = { #every feild from returned course data
-            "course_code": rawCourse[0], #course ID number
-            "course_name": rawCourse[1],
-            "block_num": rawCourse[2],
-            "course_year": rawCourse[3],
-            "course_description": rawCourse[4],
-            "department_id": rawCourse[5],
-            "faculty_id": rawCourse[6]
+        courseData = { 
+            "courseCode": rawCourse[0], #course ID number
+            "courseName": rawCourse[1],
+            "blockNum": rawCourse[2],
+            "courseYear": rawCourse[3],
+            "courseDescription": rawCourse[4],
+            "departmentID": rawCourse[5],
+            "facultyID": rawCourse[6]
         }
         
         formattedCourses.append(courseData)
