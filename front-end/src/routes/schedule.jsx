@@ -21,7 +21,6 @@ import fetchSchedule from "../functions/fetchSchedule.js";
 import { useGlobalState } from '../functions/globalState.js';
 import { useNavigate } from 'react-router-dom';
 
-let firstRender = false;
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: '#fff',
     ...theme.typography.body2,
@@ -40,7 +39,7 @@ export default function Schedule() {
     console.log(userData);
 
     const [userClasses, setUserClasses] = React.useState([]);
-    if (userData.isLogged) 
+    
     React.useEffect(() => {
         const fetchClassList = async () => {
             const classList = await fetchSchedule(userData.userID)
@@ -48,10 +47,6 @@ export default function Schedule() {
         }
     fetchClassList()
     }, [userClasses, setUserClasses]);
-    if (firstRender) {
-        console.log(userClasses);
-        firstRender=false;
-    }
     // console.log(userClasses);
     if (userData.user_type === "student") {
         // Show schedule page
