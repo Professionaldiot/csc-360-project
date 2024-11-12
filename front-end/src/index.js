@@ -10,6 +10,7 @@ import Login from './routes/login';
 import Courses from './routes/courses';
 import Error from './routes/error';
 import Schedule from './routes/schedule';
+import Registration from './routes/registration';
 import { GlobalStateProvider } from './functions/globalState';
 
 const router = createBrowserRouter([
@@ -36,6 +37,10 @@ const router = createBrowserRouter([
       {
         path: "/schedule",
         element: <Schedule />,
+      },
+      {
+        path: "/registration",
+        element: <Registration />
       }
     ],
   },

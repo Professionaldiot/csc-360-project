@@ -48,6 +48,7 @@ export default function Root() {
                 <div className='subHeader'>
                     <Button onClick={() => { navigate("/courses") }}>Courses</Button>
                     <Button onClick={() => { navigate("/schedule") }}>Schedule</Button>
+                    <Button onClick={() => { navigate("/registration") }}>Registration</Button>
                 </div>
                 <div className='selfService-Header'>
                     <Link to={'login'}><Avatar alt="Login" sx={{ width: 56, height: 56 }} /></Link>
