@@ -41,7 +41,7 @@ export default function Registration() {
     const ErrorNavigate = () => {
         useEffect(() => {
             navigate("/error");
-        },[])
+        }, [])
     };
 
 
@@ -113,7 +113,7 @@ export default function Registration() {
     const { userData, setUserData, isLogged, setIsLogged } = useGlobalState();
 
     console.log(userData + " " + isLogged + " userData");
-    if (userData.user_type === "student") {
+    if (userData.userType === "student") {
         return (
             <>
                 <div className='loginBack'>

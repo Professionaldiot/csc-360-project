@@ -70,15 +70,7 @@ export default function Courses() {
 
     const [dept, setDept] = React.useState('');
 
-    const handleDept = (event) => {
-        setDept(event.target.value);
-    };
-
     const [block, setBlock] = React.useState('');
-
-    const handleBlock = (event) => {
-        setBlock(event.target.value);
-    };
 
     const [searchText, setSearchText] = useState('');
 
@@ -93,10 +85,6 @@ export default function Courses() {
     useEffect(() => {
         console.log(courseList);
     }, [courseList]);
-
-    useEffect(() => {
-
-    }, )
 
     const { userData, setUserData, isLogged, setIsLogged } = useGlobalState();
     console.log(userData + " " + isLogged);
@@ -141,7 +129,9 @@ export default function Courses() {
                                     id="simple-select"
                                     value={dept}
                                     label="dept"
-                                    onChange={handleDept}
+                                    onChange={(event) => {
+                                        setDept(event.target.value);
+                                    }}
                                 >
                                     <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={null}>None</MenuItem>
                                     <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={1}>COMPUTER SCIENCE</MenuItem>
@@ -160,18 +150,20 @@ export default function Courses() {
                                     id="simple-select"
                                     value={block}
                                     label="block"
-                                    onChange={handleBlock}
+                                    onChange={(event) => {
+                                        setBlock(event.target.value);
+                                    }}
                                     autoWidth
                                 >
                                     <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={null}>None</MenuItem>
-                                    <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={1}>Block 1</MenuItem>
-                                    <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={2}>Block 2</MenuItem>
-                                    <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={3}>Block 3</MenuItem>
-                                    <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={4}>Block 4</MenuItem>
-                                    <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={5}>Block 5</MenuItem>
-                                    <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={6}>Block 6</MenuItem>
-                                    <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={7}>Block 7</MenuItem>
-                                    <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={8}>Block 8</MenuItem>
+                                    <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={'B1'}>Block 1</MenuItem>
+                                    <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={'B2'}>Block 2</MenuItem>
+                                    <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={'B3'}>Block 3</MenuItem>
+                                    <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={'B4'}>Block 4</MenuItem>
+                                    <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={'B5'}>Block 5</MenuItem>
+                                    <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={'B6'}>Block 6</MenuItem>
+                                    <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={'B7'}>Block 7</MenuItem>
+                                    <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={'B8'}>Block 8</MenuItem>
 
                                 </Select>
                             </FormControl>
@@ -182,12 +174,12 @@ export default function Courses() {
                     <br />
                     <br />
                     <br />
-                    
+
                     <Stack spacing={2} sx={{ float: 'left', marginLeft: '48px', width: '950px', textAlign: 'left' }}>
 
                         {courseList.length > 0 ? (
                             courseList.map((course, index) => (
-                                    <Item key={index} sx={{ height: '64px' }}>{course.courseCode}:{course.courseName} - {course.blockNum} - {course.courseDescription}</Item>
+                                <Item key={index} sx={{ height: '64px' }}>{course.courseCode}:{course.courseName} - {course.blockNum} - {course.courseDescription}</Item>
                             ))
                         )
                             :
