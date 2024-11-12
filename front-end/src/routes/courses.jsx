@@ -19,6 +19,8 @@ import { styled } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
 import { positions } from '@mui/system';
 import fetchCourses from "../functions/fetchCourses.js";
+import { useGlobalState } from '../functions/globalState';
+
 
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: '#fff',
@@ -118,6 +120,9 @@ export default function Courses() {
 
     const [courseList, setCourseList] = React.useState([{}]);
 //    console.log(TestFetchCourses("", 'b1', 1))
+    
+    const { userData, setUserData, isLogged, setIsLogged } = useGlobalState();
+    console.log(userData + " " + isLogged);
 
     return (
         <>

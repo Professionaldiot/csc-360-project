@@ -1,5 +1,6 @@
 import './App.css';
 import * as React from 'react';
+import { useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import FormHelperText  from '@mui/material/FormHelperText';
 import FormControl, {useFormControl} from '@mui/material/FormControl';
@@ -9,8 +10,6 @@ import FilledInput from '@mui/material/FilledInput';
 import InputLabel from '@mui/material/InputLabel';
 import fetchLogin from '../functions/fetchLogin';
 import { useGlobalState } from '../functions/globalState';
-
-let loggedIn = false;
 
 function EmptyUser() {
    /*
@@ -47,6 +46,7 @@ function EmptyUser() {
    return <FormHelperText>{helperText}</FormHelperText>;
 }
 
+
 export default function Login() {
 
   /*
@@ -76,7 +76,9 @@ export default function Login() {
     setValues({ ...values, [prop]: event.target.value });
   };  
 
-  const handleFormSubmit = async (event) => {
+  
+  const navigate = useNavigate();
+  const HandleFormSubmit = async (event) => {
     /*
     this function will stop you from not putting
     anything in the boxes first, then if they both
@@ -90,16 +92,19 @@ export default function Login() {
     */
     event.preventDefault();
     const willLogin = await fetchLogin(values.username, values.password);
+    // const willLogin = await fetchLogin(values.username, values.password);
     console.log(values.username, " ", values.password);
+    console.log(willLogin);
     if (willLogin.success) {
-      setUserData(willLogin.user_type);
-      console.log(userLevel);
-      setIsLogged(true);
-      window.location.href = "/courses";
+      setUserData(willLogin);
+      setIsLogged(true)   ;
+      navigate("/courses");
     }
     else {
-      console.log("no");
+      console.log("incorrect password");
     }
+    // React.useEffect(setUserData(userData));
+    // React.useEffect(setIsLogged(isLogged));
   };
 
     return (
@@ -109,7 +114,7 @@ export default function Login() {
           <div className='loginBack'>
             <Box 
             component="form"
-            onSubmit={handleFormSubmit}
+            onSubmit={HandleFormSubmit}
             sx={{ justifyContent: 'space-around', alignItems: 'center', position: "absolute", top: '50px' }}>
               <Card sx={{ backgroundColor: '#00000025', height: '375px', width: '375px'}}>
                 <CardContent>
