@@ -5,6 +5,9 @@ export default function RegisterStatus() {
 
     const { statusMessage, setStatusMessage } = useGlobalState();
     const realMessage = statusMessage;
-    return(<p>{realMessage}</p>)
+    return
+    (<div className="loginBack">
+        <p>{realMessage}</p>
+    </div>)
 
 }

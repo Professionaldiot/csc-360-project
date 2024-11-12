@@ -1,13 +1,13 @@
 
 
-async function fetchRegister(studentID, courseID) {
+async function fetchRegister(studentID, entryID) {
     try{
-        const url = "http://localhost:5000/register"
+        const url = "http://10.101.128.56:5000/register"
         const req = await fetch(url, {
             method: "POST",
             body: JSON.stringify({
                 "studentID": studentID,
-                "courseCode": courseID,
+                "entryID": entryID,
             }),
             headers: {
                 "Content-Type": "application/json"
