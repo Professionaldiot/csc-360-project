@@ -47,15 +47,7 @@ export default function Registration() {
 
     const [dept, setDept] = React.useState('');
 
-    const handleDept = (event) => {
-        setDept(event.target.value);
-    };
-
     const [block, setBlock] = React.useState('');
-
-    const handleBlock = (event) => {
-        setBlock(event.target.value);
-    };
 
     const [searchText, setSearchText] = useState('');
 
@@ -155,7 +147,9 @@ export default function Registration() {
                                         id="simple-select"
                                         value={dept}
                                         label="dept"
-                                        onChange={handleDept}
+                                        onChange={(event) => {
+                                            setDept(event.target.value);
+                                        }}
                                     >
                                         <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={null}>None</MenuItem>
                                         <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={1}>COMPUTER SCIENCE</MenuItem>
@@ -174,18 +168,20 @@ export default function Registration() {
                                         id="simple-select"
                                         value={block}
                                         label="block"
-                                        onChange={handleBlock}
+                                        onChange={(event) => {
+                                            setBlock(event.target.value);
+                                        }}
                                         autoWidth
                                     >
                                         <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={null}>None</MenuItem>
-                                        <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={1}>Block 1</MenuItem>
-                                        <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={2}>Block 2</MenuItem>
-                                        <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={3}>Block 3</MenuItem>
-                                        <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={4}>Block 4</MenuItem>
-                                        <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={5}>Block 5</MenuItem>
-                                        <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={6}>Block 6</MenuItem>
-                                        <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={7}>Block 7</MenuItem>
-                                        <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={8}>Block 8</MenuItem>
+                                        <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={'B1'}>Block 1</MenuItem>
+                                        <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={'B2'}>Block 2</MenuItem>
+                                        <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={'B3'}>Block 3</MenuItem>
+                                        <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={'B4'}>Block 4</MenuItem>
+                                        <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={'B5'}>Block 5</MenuItem>
+                                        <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={'B6'}>Block 6</MenuItem>
+                                        <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={'B7'}>Block 7</MenuItem>
+                                        <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={'B8'}>Block 8</MenuItem>
 
                                     </Select>
                                 </FormControl>
