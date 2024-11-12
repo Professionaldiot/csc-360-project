@@ -20,6 +20,7 @@ import Paper from '@mui/material/Paper';
 import { positions } from '@mui/system';
 import fetchCourses from "../functions/fetchCourses.js";
 import { useGlobalState } from '../functions/globalState.js';
+import { useNavigate } from 'react-router-dom';
 
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -34,6 +35,10 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 export default function Registration() {
+
+    const navigate = useNavigate();
+
+
 
     const [dept, setDept] = React.useState('');
 
@@ -102,109 +107,123 @@ export default function Registration() {
 
     useEffect(() => {
 
-    }, )
+    },)
 
     const { userData, setUserData, isLogged, setIsLogged } = useGlobalState();
-    console.log(userData + " " + isLogged);
 
-    return (
-        <>
-            <div className='loginBack'>
-                <Box component='section' sx={{ maxHeight: '95.5%', width: '100vw', flexDirection: 'column', justifyContent: 'space-between', alignItems: 'end', position: "absolute", top: '25px', overflow: 'auto' }}>
-                    <Typography variant='h3' component='div' sx={{ textAlign: 'Left', marginLeft: '48px' }}>Registration</Typography>
-                    <br />
-                    <Card sx={{ width: '950px', float: 'left', marginRight: "48px", marginLeft: '48px' }}>
-                        <CardContent sx={{ justifyContent: 'space-between' }}>
-                            <TextField
-                                id="filled-search"
-                                label="Search"
-                                type="search"
-                                variant="filled"
-                                sx={{ width: '800px' }}
-                                onChange={(event) => {
-                                    setSearchText(event.target.value);
-                                }}
-                            />
+    console.log(userData + " " + isLogged + " userData");
+    if (userData.user_type === "student") {
+        return (
+            <>
+                <div className='loginBack'>
+                    <Box component='section' sx={{ maxHeight: '95.5%', width: '100vw', flexDirection: 'column', justifyContent: 'space-between', alignItems: 'end', position: "absolute", top: '25px', overflow: 'auto' }}>
+                        <Typography variant='h3' component='div' sx={{ textAlign: 'Left', marginLeft: '48px' }}>Registration</Typography>
+                        <br />
+                        <Card sx={{ width: '950px', float: 'left', marginRight: "48px", marginLeft: '48px' }}>
+                            <CardContent sx={{ justifyContent: 'space-between' }}>
+                                <TextField
+                                    id="filled-search"
+                                    label="Search"
+                                    type="search"
+                                    variant="filled"
+                                    sx={{ width: '800px' }}
+                                    onChange={(event) => {
+                                        setSearchText(event.target.value);
+                                    }}
+                                />
 
-                            <Button variant='contained' onClick={() => {
-                                updateCourses()
-                                console.log(courseList)
+                                <Button variant='contained' onClick={() => {
+                                    updateCourses()
+                                    console.log(courseList)
+                                }
+
+                                } sx={{ height: '8vmin', position: 'absolute', float: 'right', marginLeft: '12px', backgroundColor: '#7c2bb3' }}>Search</Button>
+
+                            </CardContent>
+                        </Card>
+
+                        <Card sx={{ width: '360px', float: 'right', marginRight: '30px' }}>
+                            <CardContent >
+                                <Typography variant="h5" component="div" sx={{ textAlign: "center" }}>
+                                    Filter Search
+                                </Typography>
+                                <FormControl sx={{ m: 1, minWidth: 80, width: "90%", display: 'flex', flexDirection: 'column' }}>
+                                    <InputLabel id="simple-select-label" >Dept.</InputLabel>
+                                    <Select
+                                        labelId="simple-select-label"
+                                        id="simple-select"
+                                        value={dept}
+                                        label="dept"
+                                        onChange={handleDept}
+                                    >
+                                        <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={null}>None</MenuItem>
+                                        <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={1}>COMPUTER SCIENCE</MenuItem>
+                                        <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={2}>MATH</MenuItem>
+                                        <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={3}>PHYSICS</MenuItem>
+                                        <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={4}>BIOLOGY</MenuItem>
+                                        <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={5}>CHEMISTY</MenuItem>
+                                    </Select>
+                                </FormControl>
+                                <br />
+                                <FormControl sx={{ m: 1, minWidth: 80, width: "90%", display: 'flex', flexDirection: 'column' }}>
+
+                                    <InputLabel id="simple-select-label">Block</InputLabel>
+                                    <Select
+                                        labelId="simple-select-label"
+                                        id="simple-select"
+                                        value={block}
+                                        label="block"
+                                        onChange={handleBlock}
+                                        autoWidth
+                                    >
+                                        <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={null}>None</MenuItem>
+                                        <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={1}>Block 1</MenuItem>
+                                        <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={2}>Block 2</MenuItem>
+                                        <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={3}>Block 3</MenuItem>
+                                        <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={4}>Block 4</MenuItem>
+                                        <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={5}>Block 5</MenuItem>
+                                        <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={6}>Block 6</MenuItem>
+                                        <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={7}>Block 7</MenuItem>
+                                        <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={8}>Block 8</MenuItem>
+
+                                    </Select>
+                                </FormControl>
+                            </CardContent>
+                        </Card>
+                        <br />
+                        <br />
+                        <br />
+                        <br />
+                        <br />
+
+                        <Stack spacing={2} sx={{ float: 'left', marginLeft: '48px', width: '950px', textAlign: 'left' }}>
+
+                            {courseList.length > 0 ? (
+                                courseList.map((course, index) => (
+                                    <Item key={index} sx={{ height: '64px' }}>{course.courseCode}:{course.courseName} - {course.blockNum} - {course.courseDescription} <Button sx={{ backgroundColor: 'black', color: 'white', float: 'right', height: '60px' }}>Register</Button></Item>
+                                ))
+
+                            )
+                                : (<p>No Courses to Display.</p>)
                             }
-
-                            } sx={{ height: '8vmin', position: 'absolute', float: 'right', marginLeft: '12px', backgroundColor: '#7c2bb3' }}>Search</Button>
-                            
-                        </CardContent>
-                    </Card>
-
-                    <Card sx={{ width: '360px', float: 'right', marginRight: '30px' }}>
-                        <CardContent >
-                            <Typography variant="h5" component="div" sx={{ textAlign: "center" }}>
-                                Filter Search
-                            </Typography>
-                            <FormControl sx={{ m: 1, minWidth: 80, width: "90%", display: 'flex', flexDirection: 'column' }}>
-                                <InputLabel id="simple-select-label" >Dept.</InputLabel>
-                                <Select
-                                    labelId="simple-select-label"
-                                    id="simple-select"
-                                    value={dept}
-                                    label="dept"
-                                    onChange={handleDept}
-                                >
-                                    <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={null}>None</MenuItem>
-                                    <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={1}>COMPUTER SCIENCE</MenuItem>
-                                    <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={2}>MATH</MenuItem>
-                                    <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={3}>PHYSICS</MenuItem>
-                                    <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={4}>BIOLOGY</MenuItem>
-                                    <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={5}>CHEMISTY</MenuItem>
-                                </Select>
-                            </FormControl>
-                            <br />
-                            <FormControl sx={{ m: 1, minWidth: 80, width: "90%", display: 'flex', flexDirection: 'column' }}>
-
-                                <InputLabel id="simple-select-label">Block</InputLabel>
-                                <Select
-                                    labelId="simple-select-label"
-                                    id="simple-select"
-                                    value={block}
-                                    label="block"
-                                    onChange={handleBlock}
-                                    autoWidth
-                                >
-                                    <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={null}>None</MenuItem>
-                                    <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={1}>Block 1</MenuItem>
-                                    <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={2}>Block 2</MenuItem>
-                                    <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={3}>Block 3</MenuItem>
-                                    <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={4}>Block 4</MenuItem>
-                                    <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={5}>Block 5</MenuItem>
-                                    <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={6}>Block 6</MenuItem>
-                                    <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={7}>Block 7</MenuItem>
-                                    <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={8}>Block 8</MenuItem>
-
-                                </Select>
-                            </FormControl>
-                        </CardContent>
-                    </Card>
-                    <br />
-                    <br />
-                    <br />
-                    <br />
-                    <br />
-                    
-                    <Stack spacing={2} sx={{ float: 'left', marginLeft: '48px', width: '950px', textAlign: 'left' }}>
-
-                        {courseList.length > 0 ? (
-                            courseList.map((course, index) => (
-                                    <Item key={index} sx={{ height: '64px' }}>{course.courseCode}:{course.courseName} - {course.blockNum} - {course.courseDescription} <Button sx={{backgroundColor: 'black', color: 'white', float: 'right', height: '60px'}}>Register</Button></Item>
-                            ))
-                            
-                        )
-                            :
-                            (<p>No Courses to Display.</p>)
-                        }
-                    </Stack>
-                </Box>
-            </div>
-        </>
-    );
+                        </Stack>
+                    </Box>
+                </div>
+            </>
+        );
+    }
+    else if (userData.user_type === "faculty") {
+        console.log("hi");
+    }
+    else {
+        return (
+            <>
+                <div className="loginBack">
+                    <h1>Error 404</h1>
+                    <p>Page does not exist</p>
+                </div>
+            </>
+        )
+    }
 
 };

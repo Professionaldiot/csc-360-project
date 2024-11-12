@@ -5,8 +5,6 @@ export default function Error() {
         <>
             <div className="loginBack">
                 <h1>Error 404</h1>
-                <br/>
-                <br/>
                 <p>Page does not exist</p>
             </div>
         </>
