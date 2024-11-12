@@ -19,6 +19,9 @@ import { styled } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
 import { positions } from '@mui/system';
 import fetchCourses from "../functions/fetchCourses.js";
+import { useGlobalState } from '../functions/globalState.js';
+
+const { userData, setUserData, isLogged, setIsLogged } = useGlobalState();
 
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: '#fff',
@@ -69,31 +72,6 @@ function TestFetchCourses(search, blockNum, department) {
         { course_code: 'CHE102', course_name: 'Organic Chemistry', block_num: 'B2', course_description: 'Introduction to organic compounds and reactions.', department_id: 5, faculty_id: 25 }])
     }
 }
-
-
-// function TestFetchCourses(search, blockNum, department) {
-//     if (department === 1) {
-//         return ([{course_code: 'CS101', course_name: 'Introduction to Computer Science', block_num: 'B1', course_description: 'Fundamentals of computer science, including algorithms and data structures.', department_id: 1, faculty_id: 21}])
-//     }
-//     else if (department === 2) {
-//         return ([{course_code: 'MAT101', course_name: 'Calculus I', block_num: 'B1', course_description: 'Introduction to differential and integral calculus.', department_id: 2, faculty_id: 22}])
-//     }
-//     else if (department === 3) {
-//         return ([{course_code: 'PHY101', course_name: 'Physics I', block_num: 'B1', course_description: 'Fundamentals of mechanics and thermodynamics.', department_id: 3, faculty_id: 23}])
-//     }
-//     else if (department === 4) {
-//         return ([{course_code: 'BIO201', course_name: 'Genetics', block_num: 'B3', course_description: 'Introduction to Mendelian and molecular genetics.', department_id: 4, faculty_id: 24}])
-//     }
-//     else if (department === 5) {
-//         return ([{course_code: 'CHE101', course_name: 'General Chemistry I', block_num: 'B1', course_description: 'Fundamentals of chemistry including atomic theory and bonding.', department_id: 5, faculty_id: 25}])
-//     }
-//     else {
-//         return ([{course_code: 'CS101', course_name: 'Introduction to Computer Science', block_num: 'B1', course_description: 'Fundamentals of computer science, including algorithms and data structures.', department_id: 1, faculty_id: 21}])
-//     }
-// }
-
-
-
 
 export default function Courses() {
 
