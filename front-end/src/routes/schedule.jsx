@@ -46,7 +46,7 @@ export default function Schedule() {
             setUserClasses(classList)
         }
     fetchClassList()
-    }, [userClasses, setUserClasses]);
+    }, []);
     // console.log(userClasses);
     if (userData.user_type === "student") {
         // Show schedule page
