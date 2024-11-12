@@ -177,7 +177,7 @@ def writeQuery(searchParameters):
     block = searchParameters["block"]
     department = searchParameters["department"]
     
-    baseQuery = "SELECT course_code FROM Courses"
+    searchQuery = "SELECT course_code FROM Courses"
     
     searchClause = f" (course_name LIKE '%{search}%' OR course_code LIKE '%{search}%')"
     
@@ -194,40 +194,27 @@ def writeQuery(searchParameters):
     if department != "" and department != None: 
         searchClauses.append(departmentClause)
         
-    if len(searchClauses) > 0:
-        baseQuery = baseQuery + " WHERE"
-        count = 0
+    searchQuery = addClauses(searchQuery, searchClauses)
         
-        print(searchClauses)
+    print(f"search query: {searchQuery}")
         
-        for clause in searchClauses:
-            if count > 0: #first clause to be added wont use AND
-                baseQuery = baseQuery + " AND"
+    cursor.execute(searchQuery)
+    coursesData = cursor.fetchall()
+        
+    count = 0 #track how many commas to add
+    courseCodes = "("
+        
+    for course in coursesData:
             
-            baseQuery = baseQuery + clause
-            count += 1 #increment count to show that AND is needed
-        
-        searchQuery = baseQuery + ";"
-        
-        print(f"search query: {searchQuery}")
-        
-        cursor.execute(searchQuery)
-        coursesData = cursor.fetchall()
-        
-        count = 0 #track how many commas to add
-        courseCodes = "("
-        
-        for course in coursesData:
-            
-            if count > 0:
-                courseCodes = courseCodes + ", "
+        if count > 0:
+            courseCodes = courseCodes + ", "
                 
-            courseCodes = courseCodes + "'" + course[0] + "'"
-            count += 1
+        courseCodes = courseCodes + "'" + course[0] + "'"
+        count += 1
             
-        courseCodes = courseCodes + ")"
+    courseCodes = courseCodes + ")"
         
-        courseCodeClause = f" course_code IN {courseCodes}"
+    courseCodeClause = f" course_code IN {courseCodes}"
     
     if (search != "" and search != None) or (department != "" and department != None):
         if courseCodes == "()": #if no courses match terms, return empty search
@@ -237,22 +224,27 @@ def writeQuery(searchParameters):
         filterClauses.append(blockClause)
     #department accounted for in search query
         
-    if len(filterClauses) > 0:
-        filterQuery = filterQuery + " WHERE"
-        count = 0
-        
-        for clause in filterClauses:
-            if count > 0: #first clause to be added wont use AND
-                filterQuery = filterQuery + " AND"
-                
-            filterQuery = filterQuery + clause
-            count += 1 #increment count to show that AND is needed
-    
-    filterQuery = filterQuery + ";"
+    filterQuery = addClauses(filterQuery, filterClauses)
     print(filterQuery)
     
     closeConnection(db, cursor)
     return filterQuery
+
+
+def addClauses(query, clauseList): #takes a base sql query and a list of clauses, all strings, and returns a combined query
+    if len(clauseList) > 0:
+        query = query + " WHERE"
+        count = 0
+        
+        for clause in clauseList:
+            if count > 0: #first clause to be added wont use AND
+                query = query + " AND"
+                
+            query = query + clause
+            count += 1 #increment count to show that AND is needed
+    
+    query = query + ";"
+    return query
 
 
 #takes list of dictionaries containing "instanceData" and "courseData" from processCourseCodes function
