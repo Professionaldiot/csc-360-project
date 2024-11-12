@@ -174,6 +174,9 @@ def writeQuery(searchParameters):
     filterClauses = []
     
     search = searchParameters["search"]
+    if search is not None:
+        search = search.replace("'", "\\'") #fixes ' character breaking searches
+    
     block = searchParameters["block"]
     department = searchParameters["department"]
     
