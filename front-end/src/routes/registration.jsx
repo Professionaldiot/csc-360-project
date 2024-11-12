@@ -21,6 +21,7 @@ import { positions } from '@mui/system';
 import fetchCourses from "../functions/fetchCourses.js";
 import { useGlobalState } from '../functions/globalState.js';
 import { useNavigate } from 'react-router-dom';
+import fetchRegister from '../functions/fetchRegister.js';
 
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -102,7 +103,15 @@ export default function Registration() {
         console.log(courseList);
     }, [courseList]);
 
-    const { userData, setUserData, isLogged, setIsLogged } = useGlobalState();
+    const { userData, setUserData, isLogged, setIsLogged, statusMessage, setStatusMessage } = useGlobalState();
+
+    const registerOnClick = async (thisCourse) => {
+        const result = await fetchRegister( userData.userID , thisCourse );
+        setStatusMessage(result);
+        navigate("/registerstatus")
+    }
+
+    
 
     console.log(userData + " " + isLogged + " userData");
     if (userData.userType === "student") {
@@ -199,7 +208,8 @@ export default function Registration() {
                                 courseList.map((course, index) => (
                                     <Item key={index} sx={{ height: '64px' }}>
                                         {course.courseCode}:{course.courseName} - {course.blockNum} - {course.courseDescription}
-                                        <Button sx={{ backgroundColor: 'black', color: 'white', float: 'right', height: '60px' }}>
+                                        <Button sx={{ backgroundColor: 'black', color: 'white', float: 'right', height: '60px' }}
+                                        onClick={() => {registerOnClick(course)}}>
                                             Register
                                         </Button>
                                     </Item>
