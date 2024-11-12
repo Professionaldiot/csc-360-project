@@ -106,7 +106,7 @@ export default function Registration() {
     const { userData, setUserData, isLogged, setIsLogged, statusMessage, setStatusMessage } = useGlobalState();
 
     const registerOnClick = async (thisCourse) => {
-        const result = await fetchRegister( userData.userID , thisCourse );
+        const result = await fetchRegister( userData.userID , thisCourse.entryID );
         setStatusMessage(result);
         navigate("/registerstatus")
     }
