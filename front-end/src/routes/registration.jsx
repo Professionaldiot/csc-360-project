@@ -110,7 +110,7 @@ export default function Registration() {
     return (
         <>
             <div className='loginBack'>
-                <Box component='section' sx={{ maxHeight: '100%', width: '100vw', flexDirection: 'column', justifyContent: 'space-between', alignItems: 'end', position: "absolute", top: '25px', overflow: 'auto' }}>
+                <Box component='section' sx={{ maxHeight: '95.5%', width: '100vw', flexDirection: 'column', justifyContent: 'space-between', alignItems: 'end', position: "absolute", top: '25px', overflow: 'auto' }}>
                     <Typography variant='h3' component='div' sx={{ textAlign: 'Left', marginLeft: '48px' }}>Registration</Typography>
                     <br />
                     <Card sx={{ width: '950px', float: 'left', marginRight: "48px", marginLeft: '48px' }}>
