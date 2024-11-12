@@ -27,51 +27,38 @@ export default function Schedule() {
     console.log(userData);
 
     const [userClasses, setUserClasses] = React.useState([]);
-    
+
     React.useEffect(() => {
         const fetchClassList = async () => {
             const classList = await fetchSchedule(userData.userID)
             setUserClasses(classList)
         }
-    fetchClassList()
+        fetchClassList()
     }, []);
     // console.log(userClasses);
-    if (userData.user_type === "student") {
+    if (userData.userType === "student") {
         // Show schedule page
 
-        return(
+        return (
             <>
                 <div className="loginBack">
                     <Box
-                        sx={{ justifyContent: 'space-evenly', alignItems: 'end',
-                        position: "absolute", alignContent:'center',top:'10%', overflow: 'auto',maxWidth:'100%'}}>
-                            <Stack spacing={2} sx={{ float: 'left', marginLeft: '48px', width: '200px', textAlign: 'left' }}>
-                                {userClasses.length>0 ? (
-                                    userClasses.map((course, index) => {
-                                    
+                        sx={{
+                            justifyContent: 'space-evenly', alignItems: 'end',
+                            position: "absolute", alignContent: 'center', top: '10%', overflow: 'auto', maxWidth: '100%'
+                        }}>
+                        <Stack spacing={2} sx={{ float: 'left', marginLeft: '48px', width: '200px', textAlign: 'left' }}>
+                            {userClasses.length > 0 ? (
+                                userClasses.map((course, index) => {
+
                                     return (
-                                    <Item sx={{ height: '28px' }}>
-                                        {course.courseName}:{course.blockNum}
-                                    </Item>)
+                                        <Item key={index} sx={{ height: '28px' }}>
+                                            {course.courseName}:{course.blockNum}
+                                        </Item>)
                                 })) : (<p>Loading schedule...</p>)}
-                            </Stack>
+                        </Stack>
                     </Box>
                 </div>
-            </>
-        )
-    }
-
-
-
-    else if (userData.user_type === "faculty") {
-        // Show schedule page
-        return (
-            <>
-                    <Box component='section'
-                    sx={{ justifyContent: 'space-between', alignItems: 'end',
-                    position: "absolute", left: '10%', top: '20%', overflow: 'auto' }}>
-                        Hello Ajit
-                    </Box>
             </>
         )
     }
