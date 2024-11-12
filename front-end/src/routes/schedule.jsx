@@ -65,7 +65,7 @@ export default function Schedule() {
                                     <Item sx={{ height: '28px' }}>
                                         {course.courseName}:{course.blockNum}
                                     </Item>)
-                                })) : (<p>die</p>)}
+                                })) : (<p>Loading schedule...</p>)}
                             </Stack>
                     </Box>
                 </div>
@@ -89,6 +89,6 @@ export default function Schedule() {
     }
     else {
         // How did you get here?
-        navigate("/error");
+        navigate("/login");
     }
 }
