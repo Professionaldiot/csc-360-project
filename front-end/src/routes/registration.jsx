@@ -38,6 +38,11 @@ export default function Registration() {
 
     const navigate = useNavigate();
 
+    const ErrorNavigate = () => {
+        useEffect(() => {
+            navigate("/error");
+        },[])
+    };
 
 
     const [dept, setDept] = React.useState('');
@@ -212,18 +217,8 @@ export default function Registration() {
             </>
         );
     }
-    else if (userData.user_type === "faculty") {
-        console.log("hi");
-    }
     else {
-        return (
-            <>
-                <div className="loginBack">
-                    <h1>Error 404</h1>
-                    <p>Page does not exist</p>
-                </div>
-            </>
-        )
+        ErrorNavigate();
     }
 
 };
