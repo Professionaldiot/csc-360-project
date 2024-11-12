@@ -6,7 +6,6 @@ import { styled } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
 import fetchSchedule from "../functions/fetchSchedule.js";
 import { useGlobalState } from '../functions/globalState.js';
-import { useNavigate } from 'react-router-dom';
 
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: '#fff',
@@ -20,30 +19,30 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 export default function Schedule() {
-
-    const navigate = useNavigate();
+    
     const { userData, setUserData, isLogged, setIsLogged } = useGlobalState();
     console.log(userData);
-
-    const [userClasses, setUserClasses] = React.useState([]);
-    
-    React.useEffect(() => {
-        const fetchClassList = async () => {
-            const classList = await fetchSchedule(userData.userID)
-            setUserClasses(classList)
-        }
-    fetchClassList()
-    }, [userClasses, setUserClasses]);
-    // console.log(userClasses);
-    if (userData.user_type === "student") {
+    let classes = [];
+    classes.push({courseCode: 'BIO101', courseName: 'Introduction to Biology',blockNum:'B1',courseYear:'2024'});
+    classes.push({courseCode: 'BIO102', courseName: 'Ecology',blockNum:'B2',courseYear:'2024'});
+    classes.push({courseCode: 'BIO201', courseName: 'Genetics',blockNum:'B3',courseYear:'2025'});
+    classes.push({courseCode: 'BIO202', courseName: 'Mirobiology',blockNum:'B4',courseYear:'2025'});
+    console.log(classes);
+    let userT = "student";
+    let userID = "1"
+    const [studentCourses, setStudentCourses] = React.useState(null);
+    React.useEffect(() => {setStudentCourses(fetchSchedule(userID))},[]);
+    console.log(studentCourses);
+    console.log(userID);
+    if (userT === "student") {
         // Show schedule page
 
-        return(
+        return (
             <>
                 <div className="loginBack">
                     <Box
-                        sx={{ justifyContent: 'space-evenly', alignItems: 'end',
-                        position: "absolute", alignContent:'center',top:'10%', overflow: 'auto',maxWidth:'100%'}}>
+                        sx={{ justifyContent: 'space-around', alignItems: 'end',
+                        position: "absolute", alignContent:'center',top:'10%', overflow: 'auto' }}>
                             <Stack spacing={2} sx={{ float: 'left', marginLeft: '48px', width: '200px', textAlign: 'left' }}>
                                 {userClasses.length>0 ? (
                                     userClasses.map((course, index) => {
@@ -59,10 +58,7 @@ export default function Schedule() {
             </>
         )
     }
-
-
-
-    else if (userData.user_type === "faculty") {
+    else if (userT === "faculty") {
         // Show schedule page
         return (
             <>

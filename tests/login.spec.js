@@ -10,83 +10,83 @@ describe('Elements for login present', function() {
   beforeEach(async function() {
     driver = await new Builder().forBrowser('chrome').build();
     await driver.get("http://10.101.128.56:3000/login");
-  });
+  })
 
 //Verify element exists before getting rid of driver for each test
   afterEach(async function() {
     await driver.quit();
-  });
+  })
 
   it('Check for presence of password box', async function() {
     {
       const elements = await driver.findElements(By.id("login-password"));
       assert(elements.length);
-    };
-  });
+    }
+  })
 
   it('Check for presence of username box', async function() {
     {
       const elements = await driver.findElements(By.id("login-username"));
       assert(elements.length);
-    };
-  });
+    }
+  })
 
   it('Check presence of guest button', async function() {
     {
       const elements = await driver.findElements(By.css(".MuiButton-outlined"));
       assert(elements.length);
-    };
-  });
+    }
+  })
 
   it('Check presence of label in password box', async function() {
     {
       const elements = await driver.findElements(By.css(".MuiFormControl-root:nth-child(3) > .MuiFormLabel-root"));
       assert(elements.length);
-    };
-  });
+    }
+  })
 
   it('Check presence of label in username box', async function() {
     {
       const elements = await driver.findElements(By.css(".MuiFormControl-root:nth-child(1) > .MuiFormLabel-root"));
       assert(elements.length);
-    };
-  });
+    }
+  })
 
   it('Check presence of login button', async function() {
     {
       const elements = await driver.findElements(By.css(".MuiButton-contained"));
       assert(elements.length);
-    };
-  });
+    }
+  })
 
   it('Check presence of tip for password', async function() {
     {
       const elements = await driver.findElements(By.css(".MuiFormControl-root:nth-child(3) > .MuiFormHelperText-root"));
       assert(elements.length);
-    };
-  });
+    }
+  })
 
   it('Check presence of tip for username', async function() {
     {
       const elements = await driver.findElements(By.css(".MuiFormControl-root:nth-child(1) > .MuiFormHelperText-root"));
       assert(elements.length);
-    };
-  });
+    }
+  })
 
   it('Check presence of login title', async function() {
     {
       const elements = await driver.findElements(By.css(".MuiTypography-root"));
       assert(elements.length);
-    };
-  });
+    }
+  })
 
   it('Check presence of login block', async function() {
     {
       const elements = await driver.findElements(By.css(".MuiPaper-root"));
       assert(elements.length);
-    };
-  });
-});
+    }
+  })
+})
 
 
 
@@ -101,48 +101,48 @@ describe('Text of login items is correct', function() {
   beforeEach(async function() {
     driver = await new Builder().forBrowser('chrome').build();
     await driver.get("http://10.101.128.56:3000/login");
-  });
+  })
 
 //Checks if text is as intended for each test before getting rid of driver
   afterEach(async function() {
     await driver.quit();
-  });
+  })
 
   it('Check text of label for password', async function() {
     words = await driver.findElement(By.css(".MuiFormControl-root:nth-child(3) > .MuiFormLabel-root")).getText();
     assert(words.toString() == "Password");
-  });
+  })
 
   it('Check text of label for username', async function() {
     words = await driver.findElement(By.css(".MuiFormControl-root:nth-child(1) > .MuiFormLabel-root")).getText();
     assert(words.toString() == "Username");
-  });
+  })
 
   it('Check text of tip for password', async function() {
     words = await driver.findElement(By.css(".MuiFormControl-root:nth-child(3) > .MuiFormHelperText-root")).getText();
     assert(words.toString() == "Please enter a password.");
-  });
+  })
 
   it('Check text of tip for username', async function() {
     words = await driver.findElement(By.css(".MuiFormControl-root:nth-child(1) > .MuiFormHelperText-root")).getText();
     assert(words.toString() == "Please enter a username.");
-  });
+  })
 
   it('Check text of login title', async function() {
     words = await driver.findElement(By.css(".MuiTypography-root")).getText();
     assert(words.toString() == "Login");
-  });
+  })
 
   it('Check text of guest button', async function() {
     words = await driver.findElement(By.css(".MuiButton-outlined")).getText();
     assert(words.toString() == "GUEST");
-  });
+  })
 
   it('Check text of login button', async function() {
     words = await driver.findElement(By.css(".MuiButton-contained")).getText();
     assert(words.toString() == "SIGN IN");
-  });
-});
+  })
+})
 
 
 
@@ -154,6 +154,7 @@ describe('Valid usernames and passwords or guest button allow access to course p
 
   //Inputs username and password for each test and checks if webpage changed
   async function testLogin(username, password) {
+    let url;
     await driver.findElement(By.id("login-username")).sendKeys(username);
     await driver.findElement(By.id("login-password")).sendKeys(password);
     await driver.findElement(By.css(".MuiButton-contained")).click();
@@ -163,12 +164,12 @@ describe('Valid usernames and passwords or guest button allow access to course p
 //Creates driver and sends it to login
   beforeEach(async function() {
     driver = await new Builder().forBrowser('chrome').build();
-    await driver.get("http://10.101.128.56:3000/login");
-  });
+    await driver.get("http://10.101.128.56:3000//");
+  })
   
   afterEach(async function() {
     await driver.quit();
-  });
+  })
 
   it('Test valid user 1', async function() {
     testLogin("jsmith", "P@ss1234");
@@ -352,6 +353,7 @@ describe('Invalid usernames and passwords do not allow log in', function() {
 
   //Inputs username and password for each test and checks if webpage changed
   async function testLogin(username, password) {
+    let url;
     await driver.findElement(By.id("login-username")).sendKeys(username);
     await driver.findElement(By.id("login-password")).sendKeys(password);
     await driver.findElement(By.css(".MuiButton-contained")).click();
@@ -361,12 +363,12 @@ describe('Invalid usernames and passwords do not allow log in', function() {
 //Creates driver and sends it to login
   beforeEach(async function() {
     driver = await new Builder().forBrowser('chrome').build();
-    await driver.get("http://10.101.128.56:3000/login");
-  });
+    await driver.get("http://10.101.128.56:3000//");
+  })
   
   afterEach(async function() {
     await driver.quit();
-  });
+  })
 
   it('Test mismatched information 1', async function() {
     testLogin("jgreen", "SafeKey#3");

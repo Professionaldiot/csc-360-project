@@ -9,6 +9,9 @@ db = conn.connect(
     host="10.101.128.56",
     port="6033",
     user="username",
+    host="10.101.128.56",
+    port="6033",
+    user="username",
     password="123",
     database="SelfService"
     )
@@ -31,7 +34,7 @@ def searchCourseDatabase(): #formats course data, and returns it for display
     
     query = writeQuery(searchInfo)
     
-    rawCourses = cursor.execute(query)
+    rawCourses = fetchCourses(block, department)
     
     coursesJSON = formatCourseData(rawCourses)
     
@@ -49,55 +52,11 @@ def fetchCourses(block = None, department = None): #returns raw course data retr
         cursor.execute("SELECT * FROM Courses WHERE block = %s;", (block,))
         
     else:
-        cursor.execute("""
-            SELECT * 
-            FROM Courses departmentType
-            JOIN CourseInstances blockType ON departmentType.course_id = blockType.course_id
-            WHERE departmentType.department = %s AND blockType.block_num = %s;
-        """, (department, block))
-
-        result = cursor.fetchall()
-
-    return result
-   
-
-#takes a dictionary of search parameters, returns an SQL query to execute the corresponding search
-def writeQuery(searchParameters):
-    
-    query = "SELECT * FROM Courses" #starting point to be added to
-    clauses = []
-    
-    if searchParameters["search"] is not "": #add LIKE [search]
-        clauses.append(" (course_name LIKE '%" + str(searchParameters["search"]) + "%' OR course_code LIKE '%" + str(searchParameters["search"]) + "%')")
-       
-    print(query, clauses)    
+        cursor.execute("SELECT * FROM Courses WHERE department = %s AND block = %s", (department, block))
         
-    if searchParameters["block"] is not "": #add where block is [block]
-        clauses.append(" block_num = '" + str(searchParameters["block"]) + "'")
-        
-    print(query, clauses)
+    result = cursor.fetchall()
     
-    if searchParameters["department"] is not "": #add where department is [department]
-        clauses.append(" department_id = '" + str(searchParameters["department"]) + "'")
-        
-    print(query, clauses)
-    
-    if len(clauses) > 0:
-        query = query + " WHERE"
-        count = 0
-        
-        for clause in clauses:
-            if count > 0: #first clause to be added wont use AND
-                query = query + " AND"
-                
-            query = query + clause
-            count += 1 #increment count to show that AND is needed
-        
-    query = query + ";"
-    
-    print (query)
-    
-    return query
+    return result #will return list of raw course data
 
 #takes raw course data from SELECT query, returns it formatted as a JSON containing all course properties from the database
 def formatCourseData(rawCoursesList):
