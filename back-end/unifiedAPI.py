@@ -62,10 +62,10 @@ def getRegisteredCourses():
 
     db, cursor = getCursor()
     
-    cursor.execute('SELECT course_code FROM CourseRegistration WHERE student_id = (%s);', (student_id,))
-    courseCodes = cursor.fetchall()
+    cursor.execute('SELECT instance_id FROM CourseRegistration WHERE student_id = %s;', (student_id,))
+    entryIDs = cursor.fetchall()
     
-    result = processCourseCodes(courseCodes)
+    result = processCourseCodes(entryIDs)
     print(result)
     
     closeConnection(db, cursor)
@@ -80,7 +80,7 @@ def getFacultyCourses():
     
     db, cursor = getCursor()
     
-    cursor.execute('SELECT course_code FROM Courses WHERE faculty_id = (%s);', (faculty_id,))
+    cursor.execute('SELECT course_code FROM CourseInstances WHERE faculty_id = %s;', (faculty_id,))
     courseCodes = cursor.fetchall()
     
     result = processCourseCodes(courseCodes)
@@ -89,26 +89,26 @@ def getFacultyCourses():
     return result
 
 
-@app.route("/register", methods = ['POST']) #takes a student id and course code, calls function to check  
+@app.route("/register", methods = ['POST']) #takes a student id and entry id (returned in course data), calls function to check  
 #if the course is full, if there is capacity registers student for that course, if full return message saying it's full
 def register():
-    #expects "studentID" and "courseCode"
+    #expects "studentID" and "entryID"
     data = request.get_json()
-    courseCode = data.get("courseCode")
+    entryID = data.get("entryID")
     studentID = data.get("studentID")
     
-    return registerStudent(studentID, courseCode)
+    return registerStudent(studentID, entryID)
 
 
-@app.route("/unregister", methods = ['POST']) #takes a student id and course code, calls function to check
+@app.route("/unregister", methods = ['POST']) #takes a student id and entry id (returned in course data), calls function to check
 #if student is registered for that course, if so they are removed and current course enrollment is decreased
 def unregister():
-    #expects "studentID" and "courseCode"
+    #expects "studentID" and "entryID"
     data = request.get_json()
-    courseCode = data.get("courseCode")
+    entryID = data.get("entryID")
     studentID = data.get("studentID")
     
-    return unregisterStudent(studentID, courseCode)
+    return unregisterStudent(studentID, entryID)
 
 
 def validate(data):  # validate password in users table based on given username and password info
@@ -117,7 +117,7 @@ def validate(data):  # validate password in users table based on given username 
 
     db, cursor = getCursor()
     
-    cursor.execute("SELECT passcode, user_type, user_id FROM Users WHERE user_name = (%s);", (username,))
+    cursor.execute("SELECT passcode, user_type, user_id FROM Users WHERE user_name = %s;", (username,))
     result = cursor.fetchone()
     
     returnData = {}
@@ -156,9 +156,9 @@ def searchCourseDatabase(data): #searches the course database based on the provi
     
     cursor.execute(query)
     
-    rawCourses = cursor.fetchall()
+    entryIDs = cursor.fetchall()
     
-    coursesJSON = formatCourseData(rawCourses) #take raw course data and format it for return as JSON
+    coursesJSON = processCourseCodes(entryIDs) #take raw course data and format it for return as JSON
     
     print(coursesJSON)
     
@@ -166,26 +166,52 @@ def searchCourseDatabase(data): #searches the course database based on the provi
     return coursesJSON
 
 
-
-#takes a dictionary of search parameters, returns an SQL query to execute the corresponding search
+#takes a dictionary of search parameters, returns an SQL query to execute the corresponding search and return entry_ids
 def writeQuery(searchParameters):
     
-    query = "SELECT * FROM Courses" #starting point to be added to
+    db, cursor = getCursor()
+    
     clauses = []
     
     search = searchParameters["search"]
     block = searchParameters["block"]
     department = searchParameters["department"]
     
-    if search != "" and search != None: #add LIKE [search]
-        clauses.append(f" (course_name LIKE '%{search}%' OR course_code LIKE '%{search}%')") 
+    searchQuery = f"SELECT course_code FROM Courses WHERE (course_name LIKE '%{search}%' OR course_code LIKE '%{search}%');"
+    
+    filterQuery = "SELECT entry_id FROM CourseInstances"
+    
+    blockClause = f" block_num = '{block}'"
+    departmentClause = f" department_id = '{department}'"
+    
+    if search != "" and search != None: 
+        cursor.execute(searchQuery)
+        coursesData = cursor.fetchall()
         
-    if block != "" and block != None: #add where block is [block]
-        clauses.append(" block_num = '%s'" % (block,))
+        count = 0 #track how many commas to add
+        courseCodes = "("
+        
+        for course in coursesData:
+            
+            if count > 0:
+                courseCodes = courseCodes + ", "
+                
+            courseCodes = courseCodes + "'" + course[0] + "'"
+            count += 1
+            
+        courseCodes = courseCodes + ")"
+        
+        searchClause = f" course_code IN {courseCodes}"
     
-    if department != "" and department != None: #add where department is [department]
-        clauses.append(" department_id = '%s'" % (department,))
+    query = filterQuery
     
+    if search != "" and search != None:
+        clauses.append(searchClause)
+    if block != "" and block != None: 
+        clauses.append(blockClause)
+    if department != "" and department != None:
+        clauses.append(departmentClause)
+        
     if len(clauses) > 0:
         query = query + " WHERE"
         count = 0
@@ -196,30 +222,33 @@ def writeQuery(searchParameters):
                 
             query = query + clause
             count += 1 #increment count to show that AND is needed
-        
+    
     query = query + ";"
     print(query)
     
+    closeConnection(db, cursor)
     return query
 
 
-
-#takes raw course data from SELECT query, returns it formatted as a JSON containing all course properties from the database
-def formatCourseData(rawCoursesList):
+#takes list of dictionaries containing "instanceData" and "courseData" from processCourseCodes function
+def formatCourseData(courseDictList):
     
     formattedCourses = []
     
-    for rawCourse in rawCoursesList:
+    print(courseDictList)
+    
+    for courseDict in courseDictList:
         courseData = { #every feild from returned course data
-            "courseCode": rawCourse[0],
-            "courseName": rawCourse[1],
-            "blockNum": rawCourse[2],
-            "courseYear": rawCourse[3],
-            "courseDescription": rawCourse[4],
-            "departmentID": rawCourse[5],
-            "facultyID": rawCourse[6],
-            "maxCapacity": rawCourse[7],
-            "currentCapacity": rawCourse [8]
+            "courseCode": courseDict["courseData"][0],
+            "courseName": courseDict["courseData"][1],
+            "blockNum": courseDict["instanceData"][2],
+            "courseYear": courseDict["instanceData"][3],
+            "courseDescription": courseDict["courseData"][2],
+            "departmentID": courseDict["courseData"][3],
+            "facultyID": courseDict["instanceData"][6],
+            "currentCapacity": courseDict["instanceData"][4],
+            "maxCapacity": courseDict["instanceData"][5],
+            "entryID": courseDict["instanceData"][0]
         }
         
         formattedCourses.append(courseData)
@@ -228,24 +257,25 @@ def formatCourseData(rawCoursesList):
     return courseJSON
 
 
-
-def processCourseCodes(courseCodes):
+#list of entry ids returned from select query
+def processCourseCodes(entryIDs):
     
     courseInfo = []
     db, cursor = getCursor()
     
-    for courseCode in courseCodes:
-        # Prepare the query to fetch course data for each in the given list of course IDs
-        query = "SELECT * FROM Courses WHERE course_code IN (%s);" 
-        #there is almost definitely a way to do this for all of the ids at once, but i havent figured it out yet
-
-        # Execute the query
-        cursor.execute(query, courseCode)
-
-        # Fetch results
-        result = cursor.fetchone()
+    print(entryIDs)
+    
+    for entryID in entryIDs:
+        print("SELECT * FROM CourseInstances WHERE entry_id = %s;" % (entryID,))
+        cursor.execute("SELECT * FROM CourseInstances WHERE entry_id = %s;", (entryID[0],))
+        instanceData = cursor.fetchone()
         
-        courseInfo.append(result)
+        courseCode = instanceData[1] #course code
+        
+        cursor.execute("SELECT * FROM Courses WHERE course_code = %s;", (courseCode,))
+        courseData = cursor.fetchone()
+        
+        courseInfo.append({"instanceData":instanceData, "courseData":courseData})
     
     #format results as JSON
     courses = formatCourseData(courseInfo)
@@ -254,21 +284,26 @@ def processCourseCodes(courseCodes):
     return courses 
 
 
-def registerStudent(studentID, courseCode): #takes a student id number and a course code, checks if the class is full.
+def registerStudent(studentID, entryID): #takes a student id number and a course code, checks if the class is full.
     #if the class is full, return a message informing the user. if the class has space, increment current capacity for that class,
     #add an entry to the courseRegistration table with that student's id and course code
 
     db, cursor = getCursor()
+    
+    cursor.execute("SELECT course_code FROM CourseInstances WHERE entry_id = %s;", (entryID,)) #for displaying course code
+    courseCode = cursor.fetchone()[0]
 
-    if (hasCapacity(courseCode)): #if course has capacity
+    if (hasCapacity(entryID)): #if course has capacity
 
-        if hasBlock(studentID,courseCode): # if student is not already registerd for dif class for block
+        if hasBlock(studentID, entryID): # if student is not already registerd for dif class for block
         
             #increment current capacity
-            cursor.execute("UPDATE Courses SET current_capacity = current_capacity + 1 WHERE course_code = (%s);", (courseCode,))
+            cursor.execute("UPDATE CourseInstances SET current_capacity = current_capacity + 1 WHERE entry_id = %s;", (entryID,))
         
             #add link between student and course to registration table
-            cursor.execute("INSERT INTO CourseRegistration (student_id, course_code) VALUES (%s, %s);", (studentID, courseCode))
+            cursor.execute("INSERT INTO CourseRegistration (student_id, course_code, instance_id) VALUES (%s, %s, %s);", (studentID, courseCode, entryID))
+        
+            cursor.execute #for display message
         
             successMessage = ("Student #%s successfully registered for course %s" % (studentID, courseCode))
             
@@ -286,11 +321,11 @@ def registerStudent(studentID, courseCode): #takes a student id number and a cou
     return {"message": failedMessage}
     
     
-def hasCapacity(courseCode): #takes a course code, returns False if course is full, True if it has space
+def hasCapacity(entryID): #takes an entry ID, returns False if course is full, True if it has space
     
     db, cursor = getCursor()
     
-    cursor.execute("SELECT current_capacity, max_capacity FROM Courses WHERE course_code = (%s);", (courseCode,))
+    cursor.execute("SELECT current_capacity, max_capacity FROM CourseInstances WHERE entry_id = (%s);", (entryID,))
     caps = cursor.fetchone()
     
     closeConnection(db, cursor)
@@ -300,35 +335,48 @@ def hasCapacity(courseCode): #takes a course code, returns False if course is fu
     
     return True #if course has capacity
 
-def hasBlock( studentID, courseCode): #This will check to see if a student has already registered
+def hasBlock(studentID, entryID): #This will check to see if a student has already registered
     # for a course during a given block
 
     db, cursor = getCursor()
 
-    cursor.execute("SELECT course_code FROM CourseRegistration WHERE student_ID = (%s);", (studentID,))
-    courses = cursor.fetchall() #this gets all the courses a student is in
+    cursor.execute("SELECT instance_id FROM CourseRegistration WHERE student_id = (%s);", (studentID,))
+    currentCourses = cursor.fetchall() #this gets all the courses a student is in
 
-    cursor.execute("SELECT block_num, course_year FROM Courses WHERE course_code = (%s);",(courseCode,))
+    cursor.execute("SELECT block_num, course_year FROM CourseInstances WHERE entry_id = (%s);", (entryID,))
     blockYear = cursor.fetchone() #This gets the coure they are trying to register's block/year
 
+    currentCourseTimes = []
+    for courseID in currentCourses: #get block and year for all current courses
+        cursor.execute("SELECT block_num, course_year FROM CourseInstances WHERE entry_id = %s;", courseID)
+        data = cursor.fetchone()
+        
+        currentCourseTimes.append(data) #add tuple of block number, course year
+        
+    blockAvailable = True #is the block of the new course available?
+    for time in currentCourseTimes:
+        if blockYear[0] == time[0] and blockYear[1] == time[1]: #if there is overlap with a current course
+            blockAvailable = False
+            
     closeConnection(db, cursor)
-
-    for course in courses: #this goes through all the courses that the student is going to take
-        if course[0] == blockYear[0] and course[1] == blockYear [1]: #this checks to see if the year 
-            # and block allign with the course
-            return False # if it does, it returns false, because there is already a course
-    return True # it is able to register on this behalf if there are no other courses
-
+    
+    if blockAvailable: #if there is no course in that block, block is available, student can register
+        return True
+    
+    return False #slot is already occupied
 
 
-def unregisterStudent(studentID, courseCode): #takes a course code and student id, checks if student is enrolled in that course
+def unregisterStudent(studentID, entryID): #takes a course code and student id, checks if student is enrolled in that course
     #if not, returns a message informing the user. if the student is enrolled, removes them from the course, decreases the current
     #course enrollment by 1
     
     db, cursor = getCursor()
     
+    cursor.execute("SELECT course_code FROM CourseInstances WHERE entry_id = %s", (entryID,))
+    courseCode = cursor.fetchone()[0]
+    
     #check for any registration entries between this student and this course
-    cursor.execute("SELECT entry_id FROM CourseRegistration WHERE student_id = (%s) AND course_code = (%s);", (studentID, courseCode))
+    cursor.execute("SELECT entry_id FROM CourseRegistration WHERE student_id = (%s) AND instance_id = (%s);", (studentID, entryID))
     registrationID = cursor.fetchone()
     
     #if query returns nothing
@@ -340,7 +388,7 @@ def unregisterStudent(studentID, courseCode): #takes a course code and student i
     cursor.execute("DELETE FROM CourseRegistration WHERE entry_id = (%s);", registrationID)
     
     #decrease current_capacity
-    cursor.execute("UPDATE Courses SET current_capacity = current_capacity - 1 WHERE course_code = (%s);", (courseCode,))
+    cursor.execute("UPDATE CourseInstances SET current_capacity = current_capacity - 1 WHERE entry_id = (%s);", (entryID,))
     
     closeConnection(db, cursor)
     
