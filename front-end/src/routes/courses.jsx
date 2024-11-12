@@ -1,5 +1,6 @@
 import './App.css';
 import * as React from 'react';
+import { useState } from 'react';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import { createTheme, FormHelperText } from '@mui/material';
@@ -17,7 +18,9 @@ import Stack from '@mui/material/Stack';
 import { styled } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
 import { positions } from '@mui/system';
+import fetchCourses from "../functions/fetchCourses.js";
 import { useGlobalState } from '../functions/globalState';
+
 
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: '#fff',
@@ -29,6 +32,70 @@ const Item = styled(Paper)(({ theme }) => ({
         backgroundColor: '#1A2027',
     }),
 }));
+
+function TestFetchCourses(search, blockNum, department) {
+    if (department === 1) {
+        return ([{course_code: 'CS101', course_name: 'Introduction to Computer Science', block_num: 'B1', course_description: 'Fundamentals of computer science, including algorithms and data structures.', department_id: 1, faculty_id: 21},
+        {course_code: 'CS102', course_name: 'Data Structures', block_num: 'B2', course_description: 'Introduction to data organization techniques for efficient data processing.', department_id: 1, faculty_id: 21},
+        {course_code: 'CS202', course_name: 'Computer Architecture', block_num: 'B3', course_description: 'Introduction to computer hardware and low-level programming.', department_id: 1, faculty_id: 21}])
+    }
+    else if (department === 2) {
+        return ([{course_code: 'MAT101', course_name: 'Calculus I', block_num: 'B1', course_description: 'Introduction to differential and integral calculus.', department_id: 2, faculty_id: 22},
+        {course_code: 'MAT102', course_name: 'Linear Algebra', block_num: 'B2', course_description: 'Introduction to vector spaces and matrix operations.', department_id: 2, faculty_id: 22}])
+    }
+    else if (department === 3) {
+        return ([{course_code: 'PHY101', course_name: 'Physics I', block_num: 'B1', course_description: 'Fundamentals of mechanics and thermodynamics.', department_id: 3, faculty_id: 23},
+        {course_code: 'PHY102', course_name: 'Physics II', block_num: 'B2', course_description: 'Introduction to electricity and magnetism.', department_id: 3, faculty_id: 23},
+        {course_code: 'PHY201', course_name: 'Quantum Mechanics', block_num: 'B3', course_description: 'Introduction to quantum theory.', department_id: 3, faculty_id: 23}])
+    }
+    else if (department === 4) {
+        return ([{course_code: 'BIO201', course_name: 'Genetics', block_num: 'B3', course_description: 'Introduction to Mendelian and molecular genetics.', department_id: 4, faculty_id: 24},
+        {course_code: 'BIO202', course_name: 'Microbiology', block_num: 'B4', course_description: 'Study of microorganisms and their roles in the environment.', department_id: 4, faculty_id: 24}])
+    }
+    else if (department === 5) {
+        return ([{course_code: 'CHE101', course_name: 'General Chemistry I', block_num: 'B1', course_description: 'Fundamentals of chemistry including atomic theory and bonding.', department_id: 5, faculty_id: 25},
+        {course_code: 'CHE102', course_name: 'Organic Chemistry', block_num: 'B2', course_description: 'Introduction to organic compounds and reactions.', department_id: 5, faculty_id: 25}])
+    }
+    else {
+        return ([{course_code: 'CS101', course_name: 'Introduction to Computer Science', block_num: 'B1', course_description: 'Fundamentals of computer science, including algorithms and data structures.', department_id: 1, faculty_id: 21},
+        {course_code: 'CS102', course_name: 'Data Structures', block_num: 'B2', course_description: 'Introduction to data organization techniques for efficient data processing.', department_id: 1, faculty_id: 21},
+        {course_code: 'CS202', course_name: 'Computer Architecture', block_num: 'B3', course_description: 'Introduction to computer hardware and low-level programming.', department_id: 1, faculty_id: 21},
+        {course_code: 'MAT101', course_name: 'Calculus I', block_num: 'B1', course_description: 'Introduction to differential and integral calculus.', department_id: 2, faculty_id: 22},
+        {course_code: 'MAT102', course_name: 'Linear Algebra', block_num: 'B2', course_description: 'Introduction to vector spaces and matrix operations.', department_id: 2, faculty_id: 22},
+        {course_code: 'PHY101', course_name: 'Physics I', block_num: 'B1', course_description: 'Fundamentals of mechanics and thermodynamics.', department_id: 3, faculty_id: 23},
+        {course_code: 'PHY102', course_name: 'Physics II', block_num: 'B2', course_description: 'Introduction to electricity and magnetism.', department_id: 3, faculty_id: 23},
+        {course_code: 'PHY201', course_name: 'Quantum Mechanics', block_num: 'B3', course_description: 'Introduction to quantum theory.', department_id: 3, faculty_id: 23},
+        {course_code: 'BIO201', course_name: 'Genetics', block_num: 'B3', course_description: 'Introduction to Mendelian and molecular genetics.', department_id: 4, faculty_id: 24},
+        {course_code: 'BIO202', course_name: 'Microbiology', block_num: 'B4', course_description: 'Study of microorganisms and their roles in the environment.', department_id: 4, faculty_id: 24},
+        {course_code: 'CHE101', course_name: 'General Chemistry I', block_num: 'B1', course_description: 'Fundamentals of chemistry including atomic theory and bonding.', department_id: 5, faculty_id: 25},
+        {course_code: 'CHE102', course_name: 'Organic Chemistry', block_num: 'B2', course_description: 'Introduction to organic compounds and reactions.', department_id: 5, faculty_id: 25}])
+    }
+}
+
+
+// function TestFetchCourses(search, blockNum, department) {
+//     if (department === 1) {
+//         return ([{course_code: 'CS101', course_name: 'Introduction to Computer Science', block_num: 'B1', course_description: 'Fundamentals of computer science, including algorithms and data structures.', department_id: 1, faculty_id: 21}])
+//     }
+//     else if (department === 2) {
+//         return ([{course_code: 'MAT101', course_name: 'Calculus I', block_num: 'B1', course_description: 'Introduction to differential and integral calculus.', department_id: 2, faculty_id: 22}])
+//     }
+//     else if (department === 3) {
+//         return ([{course_code: 'PHY101', course_name: 'Physics I', block_num: 'B1', course_description: 'Fundamentals of mechanics and thermodynamics.', department_id: 3, faculty_id: 23}])
+//     }
+//     else if (department === 4) {
+//         return ([{course_code: 'BIO201', course_name: 'Genetics', block_num: 'B3', course_description: 'Introduction to Mendelian and molecular genetics.', department_id: 4, faculty_id: 24}])
+//     }
+//     else if (department === 5) {
+//         return ([{course_code: 'CHE101', course_name: 'General Chemistry I', block_num: 'B1', course_description: 'Fundamentals of chemistry including atomic theory and bonding.', department_id: 5, faculty_id: 25}])
+//     }
+//     else {
+//         return ([{course_code: 'CS101', course_name: 'Introduction to Computer Science', block_num: 'B1', course_description: 'Fundamentals of computer science, including algorithms and data structures.', department_id: 1, faculty_id: 21}])
+//     }
+// }
+
+
+
 
 export default function Courses() {
 
@@ -44,9 +111,19 @@ export default function Courses() {
         setBlock(event.target.value);
     };
 
+    const updateCourses = () => {setCourseList(TestFetchCourses("", block, dept))
+        console.log(courseList) 
+    };
+
+//    let courseList = [{courseCode: 'Bio10101', courseName: 'Biology Of Your Eyes', blockNum: 'B2', courseDescription: 'Please Work'}];
+    let testingVariable = 'Unchanged';
+
+    const [courseList, setCourseList] = React.useState([{}]);
+//    console.log(TestFetchCourses("", 'b1', 1))
     
     const { userData, setUserData, isLogged, setIsLogged } = useGlobalState();
     console.log(userData + " " + isLogged);
+
     return (
         <>
             <div className='loginBack'>
@@ -62,11 +139,12 @@ export default function Courses() {
                                 variant="filled"
                                 sx={{ width: '800px' }}
                             />
-                            <Button variant='contained' sx={{ height: '8vmin', position: 'absolute', float: 'right', marginLeft: '12px', backgroundColor: '#7c2bb3' }}>Search</Button>
+                            <Button variant='contained' onClick= {()=>{updateCourses()}
+                                
+                        } sx={{ height: '8vmin', position: 'absolute', float: 'right', marginLeft: '12px', backgroundColor: '#7c2bb3' }}>Search</Button>
                         </CardContent>
                     </Card>
                     
-
                     <Card sx={{ width: '360px', float: 'right', marginRight: '30px'}}>
                         <CardContent >
                             <Typography variant="h5" component="div" sx={{ textAlign: "center"}}>
@@ -80,14 +158,13 @@ export default function Courses() {
                                     value={dept}
                                     label="dept"
                                     onChange={handleDept}
-
                                 >
                                     <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={null}>None</MenuItem>
-                                    <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={"csc"}>COMPUTER SCIENCE</MenuItem>
-                                    <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={"phys"}>PHYSICS</MenuItem>
-                                    <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={"math"}>MATH</MenuItem>
-                                    <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={"bio"}>BIOLOGY</MenuItem>
-                                    <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={"chem"}>CHEMISTY</MenuItem>
+                                    <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={1}>COMPUTER SCIENCE</MenuItem>
+                                    <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={2}>MATH</MenuItem>
+                                    <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={3}>PHYSICS</MenuItem>
+                                    <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={4}>BIOLOGY</MenuItem>
+                                    <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={5}>CHEMISTY</MenuItem>
                                 </Select>
                             </FormControl>
                             <br />
@@ -103,14 +180,14 @@ export default function Courses() {
                                     autoWidth
                                 >
                                     <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={null}>None</MenuItem>
-                                    <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={1}>Block 1</MenuItem>
-                                    <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={2}>Block 2</MenuItem>
-                                    <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={3}>Block 3</MenuItem>
-                                    <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={1}>Block 4</MenuItem>
-                                    <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={2}>Block 5</MenuItem>
-                                    <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={3}>Block 6</MenuItem>
-                                    <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={1}>Block 7</MenuItem>
-                                    <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={2}>Block 8</MenuItem>
+                                    <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={'B1'}>Block 1</MenuItem>
+                                    <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={'B2'}>Block 2</MenuItem>
+                                    <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={'B3'}>Block 3</MenuItem>
+                                    <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={'B4'}>Block 4</MenuItem>
+                                    <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={'B5'}>Block 5</MenuItem>
+                                    <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={'B6'}>Block 6</MenuItem>
+                                    <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={'B7'}>Block 7</MenuItem>
+                                    <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={'B8'}>Block 8</MenuItem>
                                 </Select>
                             </FormControl>
                         </CardContent>
@@ -120,21 +197,34 @@ export default function Courses() {
                     <br />
                     <br />
                     <br />
-
+                    
                     <Stack spacing={2} sx={{ float: 'left', marginLeft: '48px', width: '950px', textAlign: 'left' }}>
-                        <Item sx={{ height: '64px' }}>Thing 1</Item>
-                        <Item sx={{ height: '64px' }}>Thing 2</Item>
-                        <Item sx={{ height: '64px' }}>Secret Third Thing</Item>
-                        <Item sx={{ height: '64px' }}>Thing 1</Item>
-                        <Item sx={{ height: '64px' }}>Thing 2</Item>
-                        <Item sx={{ height: '64px' }}>Secret Third Thing</Item>
-                        <Item sx={{ height: '64px' }}>Thing 1</Item>
-                        <Item sx={{ height: '64px' }}>Thing 2</Item>
-                        <Item sx={{ height: '64px' }}>Secret Third Thing</Item>
+                    
+                    {courseList.length > 0 ? (
+                        courseList.map((course, index) => {
+                            return (
+                                <Item sx={{height: '64px'}}>{course.course_code}:{course.course_name}</Item>
+                            )
+                        })
+                        )
+                        :
+                        (<p>No Course to Display</p>)
+                    }
+                        
+
+                        <Item sx={{ height: '28px' }}>{courseList[0].course_code + ": " + courseList[0].course_name}</Item>
+                        <Item sx={{ height: '64px' }}>{": Is this Working?"}</Item>
+                        {console.log(courseList)}
+                        {/* <Item sx={{ height: '64px' }}>{courseList[3]}</Item>
+                        <Item sx={{ height: '64px' }}>{courseList[4]}</Item>
+                        <Item sx={{ height: '64px' }}>{courseList[5]}</Item>
+                        <Item sx={{ height: '64px' }}>{courseList[6]}</Item>
+                        <Item sx={{ height: '64px' }}>{courseList[7]}</Item>
+                        <Item sx={{ height: '64px' }}>{courseList[8]}</Item> */}
                     </Stack>
                 </Box>
             </div>
-
         </>
     );
+//    
 }; 
