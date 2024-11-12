@@ -201,7 +201,12 @@ export default function Registration() {
 
                             {courseList.length > 0 ? (
                                 courseList.map((course, index) => (
-                                    <Item key={index} sx={{ height: '64px' }}>{course.courseCode}:{course.courseName} - {course.blockNum} - {course.courseDescription} <Button sx={{ backgroundColor: 'black', color: 'white', float: 'right', height: '60px' }}>Register</Button></Item>
+                                    <Item key={index} sx={{ height: '64px' }}>
+                                        {course.courseCode}:{course.courseName} - {course.blockNum} - {course.courseDescription}
+                                        <Button sx={{ backgroundColor: 'black', color: 'white', float: 'right', height: '60px' }}>
+                                            Register
+                                        </Button>
+                                    </Item>
                                 ))
 
                             )

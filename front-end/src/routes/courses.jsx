@@ -92,7 +92,10 @@ export default function Courses() {
     return (
         <>
             <div className='loginBack'>
-                <Box component='section' sx={{ maxHeight: '95.5%', width: '100vw', flexDirection: 'column', justifyContent: 'space-between', alignItems: 'end', position: "absolute", top: '25px', overflow: 'auto' }}>
+                <Box component='section' sx={{
+                    maxHeight: '95.5%', width: '100vw', flexDirection: 'column', justifyContent: 'space-between',
+                    alignItems: 'end', position: "absolute", top: '25px', overflow: 'auto'
+                }}>
                     <Typography variant='h3' component='div' sx={{ textAlign: 'Left', marginLeft: '48px' }}>Courses</Typography>
                     <br />
                     <Card sx={{ width: '950px', float: 'left', marginRight: "48px", marginLeft: '48px' }}>
@@ -179,7 +182,9 @@ export default function Courses() {
 
                         {courseList.length > 0 ? (
                             courseList.map((course, index) => (
-                                <Item key={index} sx={{ height: '64px' }}>{course.courseCode}:{course.courseName} - {course.blockNum} - {course.courseDescription}</Item>
+                                <Item key={index} sx={{ height: '64px' }}>
+                                    {course.courseCode}:{course.courseName} - {course.blockNum} - {course.courseDescription}
+                                </Item>
                             ))
                         )
                             :
