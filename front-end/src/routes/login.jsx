@@ -153,7 +153,9 @@ export default function Login() {
                     <Button type="submit" variant="contained">
                         Sign in
                     </Button>
-                    <Button variant="outlined" onClick={() => {window.location.href = "/courses"}} >Guest</Button>
+                    <Button variant="outlined" onClick={() => {navigate("/courses")}} >
+                      Guest
+                    </Button>
                   </CardActions>
                 </div>
               </Card>

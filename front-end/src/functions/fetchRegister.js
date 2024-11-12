@@ -2,7 +2,7 @@
 
 async function fetchRegister(studentID, courseID) {
     try{
-        const url = "http://10.101.128.56:5000/register"
+        const url = "http://localhost:5000/register"
         const req = await fetch(url, {
             method: "POST",
             body: JSON.stringify({
@@ -14,8 +14,8 @@ async function fetchRegister(studentID, courseID) {
             }
         })
         const res = await req.json()
-        console.log(res)
-        return res
+        console.log(res.message)
+        return res.message
     } catch (error) {
         console.error('Error:', error);
         return null;
