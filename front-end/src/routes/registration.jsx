@@ -41,31 +41,23 @@ export default function Registration() {
     const ErrorNavigate = () => {
         useEffect(() => {
             navigate("/error");
-        },[])
+        }, [])
     };
 
 
     const [dept, setDept] = React.useState('');
 
-    const handleDept = (event) => {
-        setDept(event.target.value);
-    };
-
     const [block, setBlock] = React.useState('');
-
-    const handleBlock = (event) => {
-        setBlock(event.target.value);
-    };
 
     const [searchText, setSearchText] = useState('');
 
     const updateCourses = async () => {
-        const asyncCourseList = await TestFetchCourses(searchText, block, dept);
+        const asyncCourseList = await fetchCourses(searchText, block, dept);
         setCourseList(asyncCourseList)
         console.log(courseList)
     };
 
-    const [courseList, setCourseList] = React.useState([{}]);
+    const [courseList, setCourseList] = React.useState([]);
 
     function TestFetchCourses(search, blockNum, department) {
         if (department === 1) {
@@ -110,14 +102,10 @@ export default function Registration() {
         console.log(courseList);
     }, [courseList]);
 
-    useEffect(() => {
-
-    },)
-
     const { userData, setUserData, isLogged, setIsLogged } = useGlobalState();
 
     console.log(userData + " " + isLogged + " userData");
-    if (userData.user_type === "student") {
+    if (userData.userType === "student") {
         return (
             <>
                 <div className='loginBack'>
@@ -159,7 +147,9 @@ export default function Registration() {
                                         id="simple-select"
                                         value={dept}
                                         label="dept"
-                                        onChange={handleDept}
+                                        onChange={(event) => {
+                                            setDept(event.target.value);
+                                        }}
                                     >
                                         <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={null}>None</MenuItem>
                                         <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={1}>COMPUTER SCIENCE</MenuItem>
@@ -178,18 +168,20 @@ export default function Registration() {
                                         id="simple-select"
                                         value={block}
                                         label="block"
-                                        onChange={handleBlock}
+                                        onChange={(event) => {
+                                            setBlock(event.target.value);
+                                        }}
                                         autoWidth
                                     >
                                         <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={null}>None</MenuItem>
-                                        <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={1}>Block 1</MenuItem>
-                                        <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={2}>Block 2</MenuItem>
-                                        <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={3}>Block 3</MenuItem>
-                                        <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={4}>Block 4</MenuItem>
-                                        <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={5}>Block 5</MenuItem>
-                                        <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={6}>Block 6</MenuItem>
-                                        <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={7}>Block 7</MenuItem>
-                                        <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={8}>Block 8</MenuItem>
+                                        <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={'B1'}>Block 1</MenuItem>
+                                        <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={'B2'}>Block 2</MenuItem>
+                                        <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={'B3'}>Block 3</MenuItem>
+                                        <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={'B4'}>Block 4</MenuItem>
+                                        <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={'B5'}>Block 5</MenuItem>
+                                        <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={'B6'}>Block 6</MenuItem>
+                                        <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={'B7'}>Block 7</MenuItem>
+                                        <MenuItem sx={{ minWidth: 80, width: "90%", display: 'flex' }} value={'B8'}>Block 8</MenuItem>
 
                                     </Select>
                                 </FormControl>
@@ -205,7 +197,12 @@ export default function Registration() {
 
                             {courseList.length > 0 ? (
                                 courseList.map((course, index) => (
-                                    <Item key={index} sx={{ height: '64px' }}>{course.courseCode}:{course.courseName} - {course.blockNum} - {course.courseDescription} <Button sx={{ backgroundColor: 'black', color: 'white', float: 'right', height: '60px' }}>Register</Button></Item>
+                                    <Item key={index} sx={{ height: '64px' }}>
+                                        {course.courseCode}:{course.courseName} - {course.blockNum} - {course.courseDescription}
+                                        <Button sx={{ backgroundColor: 'black', color: 'white', float: 'right', height: '60px' }}>
+                                            Register
+                                        </Button>
+                                    </Item>
                                 ))
 
                             )
