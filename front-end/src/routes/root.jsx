@@ -30,9 +30,20 @@ const ShowForUser = (role) => {
 }
     */
 
+
+
 export default function Root() {
     const navigate = useNavigate();
     const { userData, setUserData, isLogged, setIsLogged } = useGlobalState();
+
+    function checkLogged() {
+        if (isLogged) {
+            return 'schedule'
+        } 
+        else {
+            return 'login'
+        }
+    }
 
     return (
         <>
@@ -51,7 +62,7 @@ export default function Root() {
                     <Button onClick={() => { navigate("/registration") }}>Registration</Button>
                 </div>
                 <div className='selfService-Header'>
-                    <Link to={'login'}><Avatar alt="Login" sx={{ width: 56, height: 56 }} /></Link>
+                    <Link to={checkLogged}><Avatar alt="Login" sx={{ width: 56, height: 56 }} /></Link>
                 </div>
                 <div id='detail'>
                     <Outlet />
