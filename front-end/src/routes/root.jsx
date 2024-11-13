@@ -13,14 +13,14 @@ export default function Root() {
 
     const ScheduleAndRegistration = () => {
         if (isLogged) {
-            if (userData.userType === "Student") {
+            if (userData.userType === "student") {
                 return (
                     <Fragment>
                         <Button onClick={() => { navigate("/schedule") }}>Schedule</Button>
                         <Button onClick={() => { navigate("/registration") }}>Registration</Button>
                     </Fragment>
                 )
-            } if (userData.userType === "Faculty") {
+            } if (userData.userType === "faculty") {
                 return (
                     <Fragment>
                         <Button onClick={() => { navigate("/schedule") }}>Schedule</Button>
