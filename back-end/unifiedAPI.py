@@ -331,12 +331,12 @@ def registerStudent(studentID, entryID): #takes a student id number and a course
             #add link between student and course to registration table
             cursor.execute("INSERT INTO CourseRegistration (student_id, course_code, instance_id) VALUES (%s, %s, %s);", (studentID, courseCode, entryID))
         
-            successMessage = ("Student #%s successfully registered for course %s" % (studentID, courseCode))
+            successMessage = ("You successfully registered for course %s" % (courseCode,))
             
             closeConnection(db, cursor)
             return {"message": successMessage}
         
-        blockConflictMessage = ("Student #%s has a course scheduled during the same block as %s" % (studentID, courseCode))
+        blockConflictMessage = ("You have a course scheduled during the same block as %s" % (courseCode,))
         closeConnection(db, cursor)
         return {"message": blockConflictMessage}
         
@@ -407,7 +407,7 @@ def unregisterStudent(studentID, entryID): #takes a course code and student id, 
     
     #if query returns nothing
     if registrationID is None:
-        failedMessage = ("Sorry, student #%s is not currently registered for course %s" % (studentID, courseCode))
+        failedMessage = ("Sorry, you are not currently registered for course %s" % (courseCode,))
         return {"message": failedMessage}
     
     #delete registration link
@@ -418,7 +418,7 @@ def unregisterStudent(studentID, entryID): #takes a course code and student id, 
     
     closeConnection(db, cursor)
     
-    successMessage = ("Student #%s successfully removed from course %s" % (studentID, courseCode))
+    successMessage = ("You were successfully removed from course %s" % (courseCode,))
     return {"message": successMessage}
         
 
