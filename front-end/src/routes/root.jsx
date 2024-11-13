@@ -12,24 +12,17 @@ export default function Root() {
     const { userData, setUserData, isLogged, setIsLogged } = useGlobalState();
 
     const ScheduleAndRegistration = () => {
-        if (isLogged) {
-            if (userData.userType === "student") {
-                return (
-                    <Fragment>
-                        <Button onClick={() => { navigate("/schedule") }}>Schedule</Button>
-                        <Button onClick={() => { navigate("/registration") }}>Registration</Button>
-                    </Fragment>
-                )
-            } if (userData.userType === "faculty") {
-                return (
-                    <Fragment>
-                        <Button onClick={() => { navigate("/schedule") }}>Schedule</Button>
-                    </Fragment>
-                )
-            }
+        if (isLogged && (userData.userType === "student")) {
+            return (
+                <Fragment>
+                    <Button onClick={() => { navigate("/schedule") }}>Schedule</Button>
+                    <Button onClick={() => { navigate("/registration") }}>Registration</Button>
+                </Fragment>
+            )
         }
     }
-    
+
+
     return (
         <>
             {/*Header business here*/}
@@ -46,7 +39,7 @@ export default function Root() {
                     <ScheduleAndRegistration />
                 </div>
                 <div className='selfService-Header'>
-                    <Link to={'schedule'}><Avatar alt="Schedule" sx={{ width: 56, height: 56 }} /></Link>
+                    <Link to={'login'}><Avatar alt="Login" sx={{ width: 56, height: 56 }} /></Link>
                 </div>
                 <div id='detail'>
                     <Outlet />
