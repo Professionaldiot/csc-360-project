@@ -44,7 +44,16 @@
   align-items: center;
   font-family: 'Times New Roman', Times, serif;
   max-height: 100vmin;
-  
+  text-align: center;
+}
+
+.loginError {
+  color: red;
+  display: block;
+  align-items: center;
+  font-family: 'Times New Roman', Times, serif;
+  max-height: 100vmin;
+  text-align: center;
 }
 
 .loginBack {
