@@ -49,6 +49,9 @@ function EmptyUser() {
 
 export default function Login() {
 
+
+  const [validLogin, setValidLogin] = React.useState('');
+
   /*
   better to have a default value for this
   rather than an empty string, so we set
@@ -95,17 +98,22 @@ export default function Login() {
     // const willLogin = await fetchLogin(values.username, values.password);
     console.log(values.username, " ", values.password);
     console.log(willLogin);
-    if (willLogin.success) {
+    if (willLogin===null) {
+      console.log("Server error");
+      setValidLogin("Server error, try again later.")
+    }
+    else if (willLogin.success) {
       setUserData(willLogin);
-      setIsLogged(true)   ;
+      setIsLogged(true);
       navigate("/courses");
+      setValidLogin("");
     }
     else {
+      setValidLogin("Incorrect password or user, try again");
       console.log("incorrect password");
     }
-    // React.useEffect(setUserData(userData));
-    // React.useEffect(setIsLogged(isLogged));
   };
+
 
     return (
       <>
@@ -158,6 +166,8 @@ export default function Login() {
                     </Button>
                   </CardActions>
                 </div>
+                <br />
+                <p className='loginError'>{validLogin}</p>
               </Card>
             </Box>
           </div>
